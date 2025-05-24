@@ -1,0 +1,36 @@
+theme = "onedark"
+
+[editor]
+  auto-save = true
+  bufferline = "multiple"
+  color-modes = true
+
+[editor.soft-wrap]
+  enable = true
+
+[editor.auto-pairs]
+  '(' = ')'
+  '{' = '}'
+  '[' = ']'
+  "'" = "'"
+  '"' = '"'
+  '`' = '`'
+  '<' = '>'
+
+[editor.statusline]
+left = ["mode", "spinner", "file-name", "read-only-indicator", "file-modification-indicator"]
+right = ["diagnostics", "selections", "register", "position", "file-encoding", "version-control", "spacer"]
+mode.normal = "NORMAL"
+mode.insert = "INSERT"
+mode.select = "SELECT"
+
+[keys.normal]
+  C-s = ":update"
+  
+[keys.insert]
+  "C-[" = "normal_mode"
+
+[keys.normal."\\"]
+m = ":run-shell-command php artisan migrate:fresh"
+
+

@@ -1,0 +1,12 @@
+# Language Servers
+
+# PHPActor
+[language-server.phpactor]
+command = "phpactor"
+args = ["language-server"]
+
+# Languages
+[[language]]
+name = "php"
+language-servers = ["phpactor"]
+
