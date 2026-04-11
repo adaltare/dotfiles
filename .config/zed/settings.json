@@ -7,70 +7,147 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
-  "edit_predictions": {
-    "mode": "eager",
-    "copilot": {
-      "proxy": null,
-      "proxy_no_verify": null
+  "calls": {
+    "mute_on_join": true
+  },
+  "diff_view_style": "unified",
+  "notification_panel": {
+    "button": false
+  },
+  "git_panel": {
+    "tree_view": true,
+    "sort_by_path": false,
+    "status_style": "icon"
+  },
+  "status_bar": {
+    "active_language_button": true,
+    "cursor_position_button": false
+  },
+  "toolbar": {
+    "quick_actions": false
+  },
+  "selection_highlight": false,
+  "gutter": {
+    "folds": false,
+    "line_numbers": false
+  },
+  "scroll_beyond_last_line": "vertical_scroll_margin",
+  "cursor_blink": false,
+  "multi_cursor_modifier": "cmd_or_ctrl",
+  "current_line_highlight": "all",
+  "minimum_contrast_for_highlights": 45.0,
+  "rounded_selection": false,
+  "search": {
+    "center_on_match": false
+  },
+  "tab_bar": {
+    "show_tab_bar_buttons": false,
+    "show_nav_history_buttons": false,
+    "show": true
+  },
+  "project_panel": {
+    "button": true,
+    "auto_open": {
+      "on_drop": false,
+      "on_paste": false
     },
-    "enabled_in_text_threads": true
+    "file_icons": true,
+    "entry_spacing": "comfortable",
+    "hide_gitignore": false
+  },
+  "agent_servers": {
+    "your_agent": {
+      "type": "custom",
+      "command": "path_to_executable"
+    }
+  },
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Catppuccin Latte"
+  },
+  "which_key": {
+    "delay_ms": 500,
+    "enabled": true
+  },
+  "soft_wrap": "editor_width",
+  "title_bar": {
+    "show_sign_in": true,
+    "show_menus": true,
+    "show_user_menu": true,
+    "show_user_picture": false
+  },
+  "edit_predictions": {
+    "mode": "subtle",
+    "provider": "none"
+  },
+  "context_servers": {
+
   },
   "outline_panel": {
     "dock": "right"
   },
   "show_edit_predictions": true,
   "agent": {
+    "show_turn_stats": true,
+    "use_modifier_to_send": true,
+    "expand_edit_card": false,
+    "dock": "right",
     "inline_assistant_model": {
       "provider": "zed.dev",
-      "model": "claude-3-5-sonnet-latest"
+      "model": "grok-code-fast-1"
     },
-    "default_profile": "write",
+    "default_profile": "ask",
     "default_model": {
-      "provider": "zed.dev",
-      "model": "claude-3-7-sonnet-thinking-latest"
-    },
-    "version": "2"
+      "enable_thinking": false,
+      "provider": "copilot_chat",
+      "model": "claude-haiku-4.5"
+    }
   },
   // Zed's Prettier integration settings.
   "theme": {
-    "mode": "system",
-    "light": "One Dark",
-    "dark": "One Dark"
+    "mode": "dark",
+    "light": "macOS Classic Light",
+    "dark": "Material Dark"
   },
   "tabs": {
+    "show_diagnostics": "errors",
     "close_position": "right",
     "file_icons": true,
     "git_status": true
   },
-  "ui_font_size": 13,
-  "buffer_font_size": 13,
-  "vim_mode": true,
+  "ui_font_size": 15,
+  "buffer_font_size": 15,
+  "helix_mode": true,
   "vim": {
-    "default_mode": "helix_normal",
+    "default_mode": "normal",
     "toggle_relative_line_numbers": false,
-    "use_system_clipboard": "never",
-    "use_multiline_find": true,
+    "use_system_clipboard": "on_yank",
     "use_smartcase_find": true,
     "highlight_on_yank_duration": 200,
     "custom_digraphs": {},
-    "cursor_shape": {}
+    "cursor_shape": {
+      "visual": "block"
+    }
   },
-  "autosave": "on_focus_change",
+  "autosave": "on_window_change",
   "format_on_save": "off",
-  "relative_line_numbers": false,
+  "relative_line_numbers": "disabled",
   "buffer_font_family": "JetBrains Mono",
-  "buffer_font_fallbacks": ["Symbols Nerd Font Mono", "Zed Plex Mono"],
+  "buffer_font_fallbacks": ["Symbols Nerd Font Mono", ".ZedMono"],
   "centered_layout": {
     "left_padding": 0.2,
     "right_padding": 0.2
   },
   "scrollbar": {
+    "selected_text": false,
+    "cursors": true,
     "show": "always"
   },
   // allow cursor to reach edges of screen
   // "vertical_scroll_margin": 10,
   "inlay_hints": {
-    "enabled": false
+
   },
   "git": {
     "inline_blame": {
@@ -78,9 +155,50 @@
     }
   },
   "terminal": {
+    "toolbar": {
+
+    },
+    "shell": "system",
     "font_size": 12,
     "font_family": "JetBrains Mono",
-    "font_fallbacks": ["Symbols Nerd Font Mono", "Zed Plex Mono"],
-    "working_directory": "current_project_directory"
-  }
+    "font_fallbacks": ["Symbols Nerd Font Mono", ".ZedMono"],
+    "working_directory": "current_project_directory",
+    "env": {"IN_ZED": "true"},
+  },
+  // Minimap related settings
+  "minimap": {
+    // When to show the minimap in the editor.
+    // This setting can take three values:
+    // 1. Show the minimap if the editor's scrollbar is visible:
+    //    "auto"
+    // 2. Always show the minimap:
+    //    "always"
+    // 3. Never show the minimap:
+    //    "never" (default)
+    // When to show the minimap thumb.
+    // This setting can take two values:
+    // 1. Show the minimap thumb if the mouse is over the minimap:
+    //    "hover"
+    // 2. Always show the minimap thumb:
+    //    "always" (default)
+    // How the minimap thumb border should look.
+    // This setting can take five values:
+    // 1. Display a border on all sides of the thumb:
+    //    "thumb_border": "full"
+    // 2. Display a border on all sides except the left side of the thumb:
+    //    "thumb_border": "left_open" (default)
+    // 3. Display a border on all sides except the right side of the thumb:
+    //    "thumb_border": "right_open"
+    // 4. Display a border only on the left side of the thumb:
+    //    "thumb_border": "left_only"
+    // 5. Display the thumb without any border:
+    //    "thumb_border": "none"
+    // How to highlight the current line in the minimap.
+    // This setting can take the following values:
+    //
+    // 1. `null` to inherit the editor `current_line_highlight` setting (default)
+    // 2. "line" or "all" to highlight the current line in the minimap.
+    // 3. "gutter" or "none" to not highlight the current line in the minimap.
+    "current_line_highlight": null
+  },
 }

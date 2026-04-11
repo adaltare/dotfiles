@@ -24,116 +24,10 @@
     }
   },
   {
-    "context": "Editor && (showing_code_actions || showing_completions)",
-    "bindings": {
-      "ctrl-j": "editor::ContextMenuNext",
-      "ctrl-k": "editor::ContextMenuPrevious",
-      "tab": "editor::ContextMenuNext",
-      "shift-tab": "editor::ContextMenuPrevious"
-    }
-  },
-  {
     "context": "Editor && VimControl && !VimWaiting && !menu",
     "bindings": {
-      // Motion
-      "ctrl-shift-alt-w": "vim::NextWordStart",
-      "ctrl-shift-alt-b": "vim::PreviousWordStart",
-      "ctrl-shift-alt-e": "vim::NextWordEnd",
-      // Goto mode
-      "g n": "pane::ActivateNextItem",
-      "g p": "pane::ActivatePreviousItem",
-      // "tab": "pane::ActivateNextItem",
-      // "shift-tab": "pane::ActivatePrevItem",
-      "H": "pane::ActivatePreviousItem",
-      "L": "pane::ActivateNextItem",
-      "g l": "vim::EndOfLine",
-      "g h": "vim::StartOfLine",
-      "g s": "vim::FirstNonWhitespace", // "g s" default behavior is "space s"
-      "g e": "vim::EndOfDocument",
-      "g y": "editor::GoToTypeDefinition",
-      "g r": "editor::FindAllReferences", // zed specific
-      "g t": "vim::WindowTop",
-      "g c": "vim::WindowMiddle",
-      "g b": "vim::WindowBottom",
-      // Space mode
-      "space f": "file_finder::Toggle",
-      "space b": "tab_switcher::Toggle",
-      "space k": "editor::Hover",
-      "space s": "outline::Toggle",
-      "space shift-s": "project_symbols::Toggle",
-      "space shift-d": "diagnostics::Deploy",
-      "space r": "editor::Rename",
-      "space a": "editor::ToggleCodeActions",
-      "space h": "editor::SelectAllMatches",
-      "space c": "editor::ToggleComments",
-      "space /": "pane::DeploySearch",
-      "ctrl-e": "project_panel::ToggleFocus",
-      // Match mode
-      "m m": "vim::Matching",
-      "m i": ["workspace::SendKeystrokes", "v i"],
-      "m a": ["workspace::SendKeystrokes", "v a"],
-      // Bracket mode
-      "] space": "editor::NewlineBelow",
-      "[ space": "editor::NewlineAbove",
-      "] d": "editor::GoToDiagnostic",
-      "[ d": "editor::GoToPreviousDiagnostic",
-      // Misc
-      "s": "editor::SelectAllMatches",
-      "y": "editor::Copy",
-      "ctrl-k": "editor::MoveLineUp",
-      "ctrl-j": "editor::MoveLineDown",
-      "ctrl-v": "editor::Paste",
-      "shift-u": "editor::Redo",
-      "d": "editor::Delete",
-      "%": "editor::SelectAll",
-      "ctrl-c": "editor::ToggleComments",
-      "n": "search::SelectNextMatch",
-      "shift-n": "search::SelectNextMatch",
-      ">": "vim::Indent",
-      "<": "vim::Outdent",
       // Open terminal
       "ctrl-t": "terminal_panel::ToggleFocus"
-    }
-  },
-  {
-    "context": "Editor && VimControl && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
-    "bindings": {
-      // put key-bindings here if you want them to work in normal & visual mode
-    }
-  },
-  {
-    "context": "Editor && VimControl && vim_mode == normal && !VimWaiting && !menu",
-    "bindings": {
-      // put key-bindings here if you want them to work only in normal mode
-      "b": ["workspace::SendKeystrokes", "v ctrl-shift-alt-b"],
-      "w": ["workspace::SendKeystrokes", "v ctrl-shift-alt-w"],
-      "e": ["workspace::SendKeystrokes", "v ctrl-shift-alt-e"],
-      "x": "vim::ToggleVisualLine",
-      "c": ["workspace::SendKeystrokes", "v c"]
-    }
-  },
-  {
-    "context": "Editor && VimControl && vim_mode == visual && !VimWaiting && !menu",
-    "bindings": {
-      // visual, visual line & visual block modes
-      "b": ["workspace::SendKeystrokes", "v ctrl-shift-alt-b"],
-      // "w": ["workspace::SendKeystrokes", "v ctrl-shift-alt-w"],
-      "w": "vim::Word",
-      "e": ["workspace::SendKeystrokes", "v ctrl-shift-alt-e"],
-      "x": ["workspace::SendKeystrokes", "j"],
-      "d": "vim::VisualDelete"
-    }
-  },
-  {
-    "context": "Editor && VimControl && vim_mode == insert && !menu",
-    "bindings": {
-      // put key-bindings here if you want them to work in insert mode
-    }
-  },
-  {
-    "context": "ProjectPanel && not_editing",
-    "bindings": {
-      "ctrl-e": "workspace::ToggleLeftDock"
     }
   },
   {
@@ -141,6 +35,435 @@
     "bindings": {
       "ctrl-t": "workspace::ToggleBottomDock",
       "cmd-t": "workspace::NewTerminal"
+    }
+  },
+  {
+    "context": "Editor && (showing_code_actions || showing_completions)",
+    "bindings": {
+      "ctrl-n": "editor::ContextMenuNext",
+      "ctrl-p": "editor::ContextMenuPrevious"
+    }
+  },
+  {
+    "context": "(Editor && !agent_diff)",
+    "bindings": {
+      "ctrl-space": "git::ToggleStaged"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-shift-l": [
+        "task::Spawn",
+        { "task_name": "Lazygit", "reveal_target": "center" }
+      ]
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "unbind": {
+      "shift-h": "pane::ActivatePreviousItem"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "unbind": {
+      "shift-l": "pane::ActivateNextItem"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "unbind": {
+      "space": "vim::WrappingRight"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+      "bindings": {
+      "space b": "tab_switcher::OpenInActivePane"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "c": "project_panel::Rename"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "shift-r": "project_panel::Rename"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "p": "project_panel::Paste"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "cmd-v": "project_panel::Paste"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "p": "project_panel::Open"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "i": "project_panel::NewFile"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "%": "project_panel::NewFile"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "f": "project_panel::NewDirectory"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "d": "project_panel::NewDirectory"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "t": "project_panel::OpenPermanent"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "t": "workspace::OpenInTerminal"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "o": "project_panel::OpenSplitHorizontal"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "o": "workspace::OpenWithSystem"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "s": "workspace::OpenWithSystem"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "y": "project_panel::Copy"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "cmd-c": "project_panel::Copy"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "d": "project_panel::Cut"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "cmd-x": "project_panel::Cut"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "bindings": {
+      "cmd-backspace": [
+        "project_panel::Delete",
+        {
+          "skip_prompt": true
+        }
+      ]
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "alt-cmd-backspace": [
+        "project_panel::Delete",
+        {
+          "skip_prompt": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "backspace": [
+        "project_panel::Delete",
+        {
+          "skip_prompt": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "cmd-delete": [
+        "project_panel::Delete",
+        {
+          "skip_prompt": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "cmd-backspace": [
+        "project_panel::Trash",
+        {
+          "skip_prompt": true
+        }
+      ]
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "delete": [
+        "project_panel::Trash",
+        {
+          "skip_prompt": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "backspace": [
+        "project_panel::Trash",
+        {
+          "skip_prompt": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "shift-y": "workspace::CopyPath"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "alt-cmd-c": "workspace::CopyPath"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "cmd-shift-y": "workspace::CopyRelativePath"
+    }
+  },
+  {
+    "context": "ProjectPanel",
+    "unbind": {
+      "alt-cmd-shift-c": "workspace::CopyRelativePath"
+    }
+  },
+  {
+    "context": "MarkdownPreview",
+    "bindings": {
+      "g e": "markdown::ScrollToBottom"
+    }
+  },
+  {
+    "context": "MarkdownPreview",
+    "unbind": {
+      "shift-g": "markdown::ScrollToBottom"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "g e": "menu::SelectLast"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "shift-g": "menu::SelectLast"
+    }
+  },
+  {
+    "context": "OutlinePanel && not_editing",
+    "bindings": {
+      "g e": "menu::SelectLast"
+    }
+  },
+  {
+    "context": "OutlinePanel && not_editing",
+    "unbind": {
+      "shift-g": "menu::SelectLast"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && not_editing",
+    "bindings": {
+      "g e": "menu::SelectLast"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList",
+    "unbind": {
+      "shift-g": "menu::SelectLast"
+    }
+  },
+  {
+    "context": "FileHistoryView && not_editing",
+    "bindings": {
+      "g e": "menu::SelectLast"
+    }
+  },
+  {
+    "context": "FileHistoryView",
+    "unbind": {
+      "shift-g": "menu::SelectLast"
+    }
+  },
+  {
+    "context": "SettingsWindow > NavigationMenu && !search",
+    "bindings": {
+      "g e": "settings_editor::FocusLastNavEntry"
+    }
+  },
+  {
+    "context": "SettingsWindow > NavigationMenu && !search",
+    "unbind": {
+      "shift-g": "settings_editor::FocusLastNavEntry"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-shift-g": "git_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-shift-g": "git_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-.": "zed::OpenKeymap"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "cmd-k cmd-s": "zed::OpenKeymap"
+    }
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "cmd-.": "editor::ToggleCodeActions"
+    }
+  },
+  {
+    "context": "Editor",
+    "unbind": {
+      "cmd-shift-l": "editor::SelectAllMatches"
+    }
+  },
+  {
+    "context": "KeymapEditor && !BufferSearchBar",
+    "bindings": {
+      "i": "keymap_editor::CreateBinding"
+    }
+  },
+  {
+    "context": "KeymapEditor",
+    "unbind": {
+      "alt-enter": "keymap_editor::CreateBinding"
+    }
+  },
+  {
+    "context": "KeymapEditor && !BufferSearchBar",
+    "bindings": {
+      "d": "keymap_editor::DeleteBinding"
+    }
+  },
+  {
+    "context": "KeymapEditor && !BufferSearchBar",
+    "bindings": {
+      "y": "keymap_editor::CopyAction"
+    }
+  },
+  {
+    "context": "KeymapEditor",
+    "unbind": {
+      "cmd-c": "keymap_editor::CopyAction"
+    }
+  },
+  {
+    "context": "KeymapEditor && !BufferSearchBar",
+    "bindings": {
+      "/": "search::FocusSearch"
+    }
+  },
+  {
+    "context": "KeymapEditor",
+    "unbind": {
+      "cmd-f": "search::FocusSearch"
+    }
+  },
+  {
+    "context": "KeymapEditor && !BufferSearchBar",
+    "bindings": {
+      "?": "keymap_editor::ToggleKeystrokeSearch"
+    }
+  },
+  {
+    "context": "KeymapEditor",
+    "unbind": {
+      "alt-cmd-f": "keymap_editor::ToggleKeystrokeSearch"
+    }
+  },
+  {
+    "context": "KeymapEditor && !BufferSearchBar",
+    "bindings": {
+      "j": "menu::SelectNext"
+    }
+  },
+  {
+    "context": "KeymapEditor && !BufferSearchBar",
+    "bindings": {
+      "k": "menu::SelectPrevious"
     }
   }
 ]

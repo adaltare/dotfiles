@@ -20,6 +20,12 @@ alias art="php artisan"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$PATH:$BUN_INSTALL/bin"
 
-# Starship Prompt
-# The minimal, blazing-fast, and infinitely customizable prompt for any shell!
-eval "$(starship init zsh)"
+if [[ $IN_ZED == true ]]; then
+    # Very simple prompt
+    autoload -U colors && colors
+    PROMPT="%{$fg[green]%}$> %{$reset_color%}"
+else
+    # Starship Prompt
+    # The minimal, blazing-fast, and infinitely customizable prompt for any shell!
+    eval "$(starship init zsh)"
+fi
