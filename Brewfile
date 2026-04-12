@@ -1,8 +1,5 @@
-brew "composer"
 brew "helix"
 brew "lazygit"
-brew "mysql"
-brew "redis"
 brew "starship"
 brew "tokei"
 brew "tree"
