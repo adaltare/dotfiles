@@ -12,6 +12,7 @@ export EDITOR=zed
 # Aliases
 alias lg="lazygit"
 alias art="php artisan"
+alias dot="yadm enter lazygit"
 
 # Bun completions
 [ -s "/Users/hermits/.bun/_bun" ] && source "/Users/hermits/.bun/_bun"
