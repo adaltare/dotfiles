@@ -1,3 +1,6 @@
+brew "git-delta"
+brew "glow"
+brew "go"
 brew "helix"
 brew "lazygit"
 brew "starship"
