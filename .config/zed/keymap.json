@@ -443,9 +443,9 @@
     }
   },
   {
-    "context": "KeymapEditor && !BufferSearchBar",
+    "context": "KeymapEditor",
     "bindings": {
-      "?": "keymap_editor::ToggleKeystrokeSearch"
+      "ctrl-/": "keymap_editor::ToggleKeystrokeSearch"
     }
   },
   {
