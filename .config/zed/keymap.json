@@ -465,5 +465,11 @@
     "bindings": {
       "k": "menu::SelectPrevious"
     }
+  },
+  {
+    "context": "Pane",
+    "unbind": {
+      "cmd-shift-g": "search::SelectPreviousMatch"
+    }
   }
 ]
