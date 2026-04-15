@@ -55,12 +55,6 @@
     "entry_spacing": "comfortable",
     "hide_gitignore": false
   },
-  "agent_servers": {
-    "your_agent": {
-      "type": "custom",
-      "command": "path_to_executable"
-    }
-  },
   "icon_theme": {
     "mode": "dark",
     "light": "Zed (Default)",
