@@ -72,8 +72,8 @@
     "show_user_picture": false
   },
   "edit_predictions": {
-    "mode": "subtle",
-    "provider": "none"
+    "mode": "eager",
+    "provider": "zed"
   },
   "context_servers": {
 
