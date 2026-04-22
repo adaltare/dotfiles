@@ -89,7 +89,7 @@
     "show_turn_stats": true,
     "use_modifier_to_send": true,
     "expand_edit_card": false,
-    "dock": "right",
+    "dock": "left",
     "inline_assistant_model": {
       "provider": "zed.dev",
       "model": "grok-code-fast-1"
