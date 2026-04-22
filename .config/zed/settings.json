@@ -7,6 +7,9 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
+  "focus_follows_mouse": {
+    "enabled": true
+  },
   "calls": {
     "mute_on_join": true
   },
