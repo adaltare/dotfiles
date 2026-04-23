@@ -10,14 +10,20 @@
   "focus_follows_mouse": {
     "enabled": true
   },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "agent_servers": {
+    "github-copilot-cli": {
+      "type": "registry"
+    }
+  },
   "calls": {
     "mute_on_join": true
   },
   "diff_view_style": "unified",
-  "notification_panel": {
-    "button": false
-  },
   "git_panel": {
+    "dock": "right",
     "tree_view": true,
     "sort_by_path": false,
     "status_style": "icon"
@@ -49,6 +55,7 @@
     "show": true
   },
   "project_panel": {
+    "dock": "right",
     "button": true,
     "auto_open": {
       "on_drop": false,
