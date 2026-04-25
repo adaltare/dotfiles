@@ -154,21 +154,9 @@
     }
   },
   {
-    "context": "ProjectPanel && not_editing",
-    "bindings": {
-      "d": "project_panel::Cut"
-    }
-  },
-  {
-    "context": "ProjectPanel",
-    "unbind": {
-      "cmd-x": "project_panel::Cut"
-    }
-  },
-  {
     "context": "ProjectPanel",
     "bindings": {
-      "cmd-backspace": [
+      "shift-d": [
         "project_panel::Delete",
         {
           "skip_prompt": true
@@ -190,7 +178,7 @@
   {
     "context": "ProjectPanel && not_editing",
     "bindings": {
-      "backspace": [
+      "d": [
         "project_panel::Delete",
         {
           "skip_prompt": false
@@ -588,36 +576,8 @@
   },
   {
     "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
-    "bindings": {
-      "s s": "vim::HelixKeepNewestSelection"
-    }
-  },
-  {
-    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
     "unbind": {
       ",": "vim::HelixKeepNewestSelection"
-    }
-  },
-  {
-    "context": "VimControl && !menu",
-    "bindings": {
-      "s j": [
-        "editor::SelectNext",
-        {
-          "replace_newest": true
-        }
-      ]
-    }
-  },
-  {
-    "context": "VimControl && !menu",
-    "bindings": {
-      "s k": [
-        "editor::SelectPrevious",
-        {
-          "replace_newest": true
-        }
-      ]
     }
   },
   {
@@ -647,13 +607,377 @@
   {
     "context": "Workspace",
     "bindings": {
-      "cmd-shift-j": "multi_workspace::ToggleWorkspaceSidebar"
+      "cmd-shift-h": "multi_workspace::ToggleWorkspaceSidebar"
     }
   },
   {
     "context": "Workspace",
     "unbind": {
       "alt-cmd-j": "multi_workspace::ToggleWorkspaceSidebar"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "s v": "vim::RestoreVisualSelection"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "unbind": {
+      "g v": "vim::RestoreVisualSelection"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "s j": [
+        "editor::SelectNext",
+        {
+          "replace_newest": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "s k": [
+        "editor::SelectPrevious",
+        {
+          "replace_newest": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "s m": "editor::OpenSelectionsInMultibuffer"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "bindings": {
+      "s l": "editor::SelectNextSyntaxNode"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "bindings": {
+      "s i": "editor::SelectSmallerSyntaxNode"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "unbind": {
+      "alt-i": "editor::SelectSmallerSyntaxNode"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "bindings": {
+      "s o": "editor::SelectLargerSyntaxNode"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "unbind": {
+      "alt-o": "editor::SelectLargerSyntaxNode"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "bindings": {
+      "s h": "editor::SelectPreviousSyntaxNode"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "unbind": {
+      "alt-p": "editor::SelectPreviousSyntaxNode"
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "bindings": {
+      "s enter": [
+        "editor::SplitSelectionIntoLines",
+        {
+          "keep_selections": true
+        }
+      ]
+    }
+  },
+  {
+    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
+    "unbind": {
+      "alt-s": [
+        "editor::SplitSelectionIntoLines",
+        {
+          "keep_selections": true
+        }
+      ]
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-shift-k": "editor::ToggleFocus"
+    }
+  },
+  {
+    "context": "Workspace",
+      "bindings": {
+      "cmd-shift-d": "debug_panel::Toggle"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "cmd-shift-d": "debug_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "cmd-shift-b": "outline_panel::ToggleFocus"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "shift-enter": "vim::InsertEmptyLineAbove"
+    }
+  },
+  {
+    "context": "vim_operator == helix_previous",
+    "unbind": {
+      "space": "vim::InsertEmptyLineAbove"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "enter": "vim::InsertEmptyLineBelow"
+    }
+  },
+  {
+    "context": "vim_operator == helix_next",
+    "unbind": {
+      "space": "vim::InsertEmptyLineBelow"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "a": "git::StageAll"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "unbind": {
+      "shift-x": "git::StageAll"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "shift-a": "git::UnstageAll"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "unbind": {
+      "shift-u": "git::UnstageAll"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "p": "git::Pull"
+    }
+  },
+  {
+    "context": "GitPanel",
+    "unbind": {
+      "ctrl-g down": "git::Pull"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "shift-p": "git::Push"
+    }
+  },
+  {
+    "context": "GitPanel",
+    "unbind": {
+      "ctrl-g up": "git::Push"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "ctrl-p": "git::ForcePush"
+    }
+  },
+  {
+    "context": "GitPanel",
+    "unbind": {
+      "ctrl-g shift-up": "git::ForcePush"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "s": "git::StashAll"
+    }
+  },
+  {
+    "context": "StashDiff > Editor",
+    "unbind": {
+      "ctrl-shift-backspace": "git::DropCurrentStash"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "shift-s": "git::StashPop"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "ctrl-s": "git::ViewStash"
+    }
+  },
+  {
+    "context": "StashList || StashList > Picker > Editor",
+    "bindings": {
+      "cmd-backspace": "stash_picker::DropStashItem"
+    }
+  },
+  {
+    "context": "StashList || StashList > Picker > Editor",
+    "unbind": {
+      "ctrl-shift-backspace": "stash_picker::DropStashItem"
+    }
+  },
+  {
+    "context": "StashList || StashList > Picker > Editor",
+    "bindings": {
+      "shift-space": "stash_picker::ShowStashItem"
+    }
+  },
+  {
+    "context": "StashList || StashList > Picker > Editor",
+    "unbind": {
+      "ctrl-shift-v": "stash_picker::ShowStashItem"
+    }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-shift-b": "git::Branch"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "ctrl-cmd-b": "git::Branch"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "space": "git::ToggleStaged"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "unbind": {
+      "x": "git::ToggleStaged"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "d": [
+        "git::RestoreFile",
+        {
+          "skip_prompt": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "unbind": {
+      "backspace": [
+        "git::RestoreFile",
+        {
+          "skip_prompt": false
+        }
+      ]
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "shift-d": [
+        "git::RestoreFile",
+        {
+          "skip_prompt": true
+        }
+      ]
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "unbind": {
+      "cmd-delete": [
+        "git::RestoreFile",
+        {
+          "skip_prompt": true
+        }
+      ]
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "c": "git::Commit"
+    }
+  },
+  {
+    "context": "GitDiff > Editor",
+    "unbind": {
+      "cmd-enter": "git::Commit"
+    }
+  },
+  {
+    "context": "CommitEditor > Editor",
+    "bindings": {
+      "tab": "git_panel::FocusChanges"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "u": "git::Uncommit"
+    }
+  },
+  {
+    "context": "GitPanel && ChangesList && !GitBranchSelector",
+    "bindings": {
+      "f": "git::Fetch"
+    }
+  },
+  {
+    "context": "GitPanel",
+    "unbind": {
+      "ctrl-g ctrl-g": "git::Fetch"
     }
   }
 ]
