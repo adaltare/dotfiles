@@ -84,7 +84,7 @@
   },
   "edit_predictions": {
     "mode": "eager",
-    "provider": "zed"
+    "provider": "copilot"
   },
   "context_servers": {
 
