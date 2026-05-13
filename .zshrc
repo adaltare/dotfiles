@@ -25,7 +25,9 @@ source <(fzf --zsh)
 alias lg="lazygit"
 alias art="php artisan"
 alias dot="yadm enter lazygit"
-alias cd="z"
+if command -v z &>/dev/null; then
+    alias cd="z"
+fi
 
 # Bun completions
 [ -s "/Users/hermits/.bun/_bun" ] && source "/Users/hermits/.bun/_bun"
