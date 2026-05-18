@@ -1,20 +1,24 @@
 #!/bin/sh
 
-# Install Homebrew and packages
+# Add or remove packages here to install them globally
+PACKAGES="git-delta glow go helix lazygit starship tokei tree typst yadm fzf zoxide"
 
+# Install homebrew and packages
 system_type=$(uname -s)
-
 if [ "$system_type" = "Darwin" ]; then
-
-  # install homebrew if it's missing
-  if ! command -v brew >/dev/null 2>&1; then
-    echo "Installing homebrew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  major_os_version=$(sw_vers -productVersion | cut -d. -f1)
+  if [ "$major_os_version" -gt 12 ]; then
+    if ! command -v brew >/dev/null 2>&1; then
+      echo "Installing Homebrew"
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    brew install $PACKAGES
+  else
+    echo "Homebrew is not compatible with macOS version 12 or earlier. Using MacPorts instead."
+    if command -v port >/dev/null 2>&1; then
+      sudo port install $PACKAGES
+    else
+      echo "Please install PacPorts and run yadm bootstrap again."
+    fi
   fi
-
-  if [ -f "$HOME/.Brewfile" ]; then
-    echo "Updating homebrew bundle"
-    brew bundle --global
-  fi
-
 fi
