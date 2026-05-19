@@ -22,6 +22,9 @@ j() {
   fi
 }
 
+# Hide homebrew's auto-update message
+export HOMEBREW_NO_AUTO_UPDATE=1
+
 # Set up fzf key bindings and fuzzy completion
 source <(fzf --zsh)
 export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
