@@ -1,29 +1,16 @@
 # Ignore most everything in the home directory
-
-/.CFUserTextEncoding
-/.DS_Store
-/.Trash
-/.cache
-# /.config
-# /.gitconfig
-# /.gitignore
-/.gnupg
-# /.hushlogin
-/.lesshst
-/.local
-/.macports
-# /.ssh
-# /.zprofile
-# /.zsh_history
-/.zsh_sessions
-# /.zshrc
-# /Desktop
-# /Documents
-# /Downloads
-/Library
-/Movies
-# /Music
-/Pictures
-/Public
-# /go*
+/*
+!/.config
+!/.gitconfig
+!/.gitignore
+!/.hushlogin
+!/.ssh
+!/.zprofile
+!/.zsh_history
+!/.zshrc
+!/Desktop
+!/Documents
+!/Downloads
+!/Music
+!/go
 
