@@ -88,4 +88,8 @@ else
     # eval "$(starship init zsh)"
 fi
 
-
+# Search with ripgrep, select results with fzf, preview with bat showing context
+z() {
+    rg --line-number --no-heading --color=always --smart-case "$@" | \
+    fzf --ansi --delimiter : --preview 'bat --style=numbers --color=always --line-range {2}::4 --highlight-line {2} {1}'
+}
