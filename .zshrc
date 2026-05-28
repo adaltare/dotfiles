@@ -75,18 +75,9 @@ alias dot="yadm enter lazygit"
 [ -s "/Users/hermits/.bun/_bun" ] && source "/Users/hermits/.bun/_bun"
 export BUN_INSTALL="$HOME/.bun"
 
-if [[ $IN_ZED == true ]]; then
-    # Very simple prompt
-    autoload -U colors && colors
-    PROMPT="%{$fg[green]%}$> %{$reset_color%}"
-else
-    # Very simple prompt
-    autoload -U colors && colors
-    PROMPT="%{$fg[green]%}%2~ %{$fg[blue]%}$>%{$reset_color%} "
-    # Starship Prompt
-    # The minimal, blazing-fast, and infinitely customizable prompt for any shell!
-    # eval "$(starship init zsh)"
-fi
+# Very simple prompt
+autoload -U colors && colors
+PROMPT="%{$fg[green]%}%2~ %{$fg[blue]%}$>%{$reset_color%} "
 
 # Search with ripgrep, select results with fzf, preview with bat showing context
 z() {
