@@ -122,9 +122,9 @@
   "buffer_font_size": 15,
   "helix_mode": true,
   "vim": {
+    "use_system_clipboard": "never",
     "default_mode": "normal",
     "toggle_relative_line_numbers": false,
-    "use_system_clipboard": "on_yank",
     "use_smartcase_find": true,
     "highlight_on_yank_duration": 200,
     "custom_digraphs": {},
