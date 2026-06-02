@@ -1,6 +1,7 @@
 # $PATH
 # Add Bun binaries to PATH
-# export PATH="$PATH:$BUN_INSTALL/bin"
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
 # Add Go binaries to PATH
 # export PATH="$PATH:$HOME/go/bin"
 
