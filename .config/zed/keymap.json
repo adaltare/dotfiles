@@ -102,7 +102,7 @@
   {
     "context": "ProjectPanel && not_editing",
     "bindings": {
-      "f": "project_panel::NewDirectory"
+      "n": "project_panel::NewDirectory"
     }
   },
   {
@@ -155,17 +155,6 @@
   },
   {
     "context": "ProjectPanel",
-    "bindings": {
-      "shift-d": [
-        "project_panel::Delete",
-        {
-          "skip_prompt": true
-        }
-      ]
-    }
-  },
-  {
-    "context": "ProjectPanel",
     "unbind": {
       "alt-cmd-backspace": [
         "project_panel::Delete",
@@ -178,7 +167,7 @@
   {
     "context": "ProjectPanel && not_editing",
     "bindings": {
-      "d": [
+      "backspace": [
         "project_panel::Delete",
         {
           "skip_prompt": false
@@ -978,6 +967,29 @@
     "context": "GitPanel",
     "unbind": {
       "ctrl-g ctrl-g": "git::Fetch"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "shift-backspace": [
+        "project_panel::Delete",
+        {
+          "skip_prompt": true
+        }
+      ]
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "unbind": {
+      "shift-d": "project_panel::Delete"
+    }
+  },
+  {
+    "context": "ProjectPanel && not_editing",
+    "bindings": {
+      "d": "project_panel::Cut"
     }
   }
 ]
