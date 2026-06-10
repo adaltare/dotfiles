@@ -2,3 +2,5 @@
 	name = adaltare
 	email = athanasius@edcarm.org
 
+[pull]
+	rebase = true
