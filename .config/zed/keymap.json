@@ -991,5 +991,23 @@
     "bindings": {
       "d": "project_panel::Cut"
     }
+  },
+  {
+    "context": "Pane",
+    "unbind": {
+      "alt-enter": "search::SelectAllMatches"
+    }
+  },
+  {
+    "context": "BufferSearchBar",
+    "bindings": {
+      "cmd-enter": "search::SelectAllMatches"
+    }
+  },
+  {
+    "context": "BufferSearchBar",
+    "unbind": {
+      "alt-enter": "search::SelectAllMatches"
+    }
   }
 ]
