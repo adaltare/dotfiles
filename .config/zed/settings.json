@@ -12,7 +12,13 @@
     "dock": "right"
   },
   "agent_servers": {
-    "github-copilot-cli": {
+    "claude-acp": {
+      "default_config_options": {
+        "effort": "default",
+        "fast": true,
+        "mode": "auto",
+        "model": "default"
+      },
       "type": "registry"
     }
   },
@@ -23,7 +29,6 @@
   "git_panel": {
     "dock": "right",
     "tree_view": true,
-    "sort_by_path": false,
     "status_style": "icon"
   },
   "status_bar": {
@@ -66,7 +71,7 @@
   "icon_theme": {
     "mode": "dark",
     "light": "Zed (Default)",
-    "dark": "Catppuccin Latte"
+    "dark": "Zed (Default)"
   },
   "which_key": {
     "delay_ms": 500,
