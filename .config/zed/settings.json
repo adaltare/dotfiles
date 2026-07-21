@@ -7,6 +7,20 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
+  "ssh_connections": [
+    {
+      "host": "137.184.23.147",
+      "username": "forge",
+      "args": [],
+      "projects": [
+        {
+          "paths": [
+            "/home/forge/metricslite.on-forge.com"
+          ]
+        }
+      ]
+    }
+  ],
   "cli_default_open_behavior": "new_window",
   "collaboration_panel": {
     "dock": "right"
@@ -83,10 +97,6 @@
     "show_menus": true,
     "show_user_menu": true,
     "show_user_picture": false
-  },
-  "edit_predictions": {
-    "mode": "eager",
-    "provider": "copilot"
   },
   "context_servers": {
 
