@@ -1009,5 +1009,11 @@
     "unbind": {
       "alt-enter": "search::SelectAllMatches"
     }
-  }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "ctrl-cmd-o": "projects::OpenRecent"
+    }
+  },
 ]
