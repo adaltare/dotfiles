@@ -222,7 +222,7 @@ git:
   #   replace: ""
 
   # See https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#predefined-branch-name-prefix
-  branchPrefix: "feature/"
+  # branchPrefix: "feature/"
   # If true, parse emoji strings in commit messages e.g. render :rocket: as 🚀
   # (This should really be under 'gui', not 'git')
   parseEmoji: false
