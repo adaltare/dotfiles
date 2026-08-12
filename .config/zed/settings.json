@@ -19,6 +19,18 @@
           ]
         }
       ]
+    },
+    {
+      "host": "143.244.213.88",
+      "username": "forge",
+      "args": [],
+      "projects": [
+        {
+          "paths": [
+            "/home/forge/impact.edcarm.org/current/./"
+          ]
+        }
+      ]
     }
   ],
   "cli_default_open_behavior": "new_window",
@@ -28,10 +40,10 @@
   "agent_servers": {
     "claude-acp": {
       "default_config_options": {
-        "effort": "default",
-        "fast": true,
+        "effort": "medium",
+        "fast": false,
         "mode": "auto",
-        "model": "default"
+        "model": "sonnet"
       },
       "type": "registry"
     }
@@ -106,9 +118,11 @@
   },
   "show_edit_predictions": true,
   "agent": {
+    "expand_edit_card": false,
+    "expand_terminal_card": false,
+    "terminal_init_command": "",
     "show_turn_stats": true,
     "use_modifier_to_send": true,
-    "expand_edit_card": false,
     "dock": "left",
     "inline_assistant_model": {
       "provider": "zed.dev",
@@ -148,7 +162,7 @@
     }
   },
   "autosave": "on_window_change",
-  "format_on_save": "off",
+  "format_on_save": "modifications",
   "relative_line_numbers": "disabled",
   "buffer_font_family": "JetBrains Mono",
   "buffer_font_fallbacks": ["Symbols Nerd Font Mono", ".ZedMono"],
