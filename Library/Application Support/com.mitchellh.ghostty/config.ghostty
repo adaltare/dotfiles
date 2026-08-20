@@ -1,0 +1,7 @@
+config-file = ?auto/theme.ghostty
+
+window-padding-x = 8
+window-padding-y = 8
+keybind = global:cmd+backquote=toggle_quick_terminal
+quick-terminal-position = left
+quick-terminal-size = 30%
