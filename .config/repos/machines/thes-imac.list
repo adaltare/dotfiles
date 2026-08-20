@@ -1,0 +1,7 @@
+# Repositories wanted only on thes-imac, in addition to common.list.
+#
+# Same format as common.list. Clone and record here with:
+#   repos clone -m username/repo
+#
+# For a new machine, create machines/<lowercased LocalHostName>.list;
+# `repos help` prints the name this machine resolves to.

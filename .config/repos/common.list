@@ -1,0 +1,12 @@
+# Repositories wanted on every machine.
+#
+# One per line: "<owner/name> [directory]", or a full git URL for hosts
+# other than GitHub. Without a directory, the repo name is used, so
+# adaltare/typst-documents lands in ~/repos/typst-documents.
+#
+# Add entries by hand, or clone and record in one step with:
+#   repos clone username/repo
+
+adaltare/typst-documents
+adaltare/carmelite-breviary
+adaltare/simplex

@@ -1,0 +1,295 @@
+#!/usr/bin/env bash
+#
+# repos - keep this machine's set of git repositories cloned under ~/repos
+#
+# Which repos belong on a machine is declared in two manifests, both
+# tracked with yadm:
+#
+#   ~/.config/repos/common.list              wanted on every machine
+#   ~/.config/repos/machines/<machine>.list  wanted on this machine only
+#
+# <machine> is the lowercased LocalHostName, override with $REPOS_MACHINE.
+#
+# A manifest line is "<repo> [directory]", where <repo> is either a GitHub
+# "owner/name" shorthand or a full git URL. Without a directory, the repo
+# name is used. Blank lines and # comments are ignored.
+#
+#   adaltare/typst-documents
+#   frmatthew/exsurge
+#   adaltare/scripts            my-scripts
+#   git@codeberg.org:me/notes.git
+
+set -euo pipefail
+
+ROOT="${REPOS_ROOT:-$HOME/repos}"
+CONF="${REPOS_CONFIG:-$HOME/.config/repos}"
+PROTOCOL="${REPOS_PROTOCOL:-ssh}"
+
+MACHINE="${REPOS_MACHINE:-$(scutil --get LocalHostName 2>/dev/null || hostname -s)}"
+MACHINE="$(printf '%s' "$MACHINE" | tr '[:upper:]' '[:lower:]')"
+
+COMMON_LIST="$CONF/common.list"
+MACHINE_LIST="$CONF/machines/$MACHINE.list"
+
+if [ -t 1 ]; then
+  C_OK=$'\033[32m'; C_WARN=$'\033[33m'; C_ERR=$'\033[31m'
+  C_DIM=$'\033[2m'; C_OFF=$'\033[0m'
+else
+  C_OK=''; C_WARN=''; C_ERR=''; C_DIM=''; C_OFF=''
+fi
+
+die()  { printf 'repos: %s\n' "$*" >&2; exit 1; }
+warn() { printf 'repos: %s\n' "$*" >&2; }
+row()  { printf '%s%-9s%s %s\n' "$1" "$2" "$C_OFF" "$3"; }
+
+# Expand a manifest repo field into a clone URL.
+url_for() {
+  case "$1" in
+    *://*|*@*:*) printf '%s\n' "$1" ;;
+    */*)
+      if [ "$PROTOCOL" = https ]; then
+        printf 'https://github.com/%s.git\n' "${1%.git}"
+      else
+        printf 'git@github.com:%s.git\n' "${1%.git}"
+      fi
+      ;;
+    *) return 1 ;;
+  esac
+}
+
+# Emit "<url>\t<directory>\t<source manifest>" for every wanted repo.
+resolve() {
+  local file repo dir url
+  for file in "$COMMON_LIST" "$MACHINE_LIST"; do
+    [ -f "$file" ] || continue
+    while read -r repo dir; do
+      [ -n "$repo" ] || continue
+      if ! url=$(url_for "$repo"); then
+        warn "$(basename "$file"): cannot parse '$repo', skipping"
+        continue
+      fi
+      [ -n "$dir" ] || dir="${repo##*/}"
+      printf '%s\t%s\t%s\n' "$url" "${dir%.git}" "$file"
+    done < <(sed -e 's/#.*//' -e 's/[[:space:]]*$//' "$file")
+  done
+}
+
+# True when no tracked file has been modified. Untracked files are ignored
+# so that build output does not block a fast-forward.
+tracked_clean() {
+  git -C "$1" diff --quiet && git -C "$1" diff --cached --quiet
+}
+
+# Echo "<behind> <ahead>" for the checked-out branch against its upstream.
+ahead_behind() {
+  local counts
+  counts=$(git -C "$1" rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null) || return 1
+  printf '%s %s\n' "${counts%%[[:space:]]*}" "${counts##*[[:space:]]}"
+}
+
+cmd_sync() {
+  local url dir src path upstream behind ahead ab
+  local -a dirty=() diverged=() unpushed=() failed=()
+  local cloned=0 updated=0 current=0
+
+  mkdir -p "$ROOT"
+  while IFS=$'\t' read -r url dir src; do
+    path="$ROOT/$dir"
+
+    if [ ! -e "$path" ]; then
+      if git clone --quiet "$url" "$path"; then
+        row "$C_OK" clone "$dir"
+        cloned=$((cloned + 1))
+      else
+        row "$C_ERR" fail "$dir (clone failed)"
+        failed+=("$dir")
+      fi
+      continue
+    fi
+
+    if [ ! -d "$path/.git" ]; then
+      row "$C_WARN" skip "$dir (exists but is not a git repo)"
+      continue
+    fi
+
+    if ! git -C "$path" fetch --quiet --prune origin; then
+      row "$C_ERR" fail "$dir (fetch failed)"
+      failed+=("$dir")
+      continue
+    fi
+
+    if ! tracked_clean "$path"; then
+      row "$C_WARN" dirty "$dir (fetched, working tree left alone)"
+      dirty+=("$dir")
+      continue
+    fi
+
+    if ! upstream=$(git -C "$path" rev-parse --abbrev-ref '@{upstream}' 2>/dev/null); then
+      row "$C_DIM" detached "$dir (no upstream branch)"
+      continue
+    fi
+
+    behind=0; ahead=0
+    if ab=$(ahead_behind "$path"); then read -r behind ahead <<<"$ab"; fi
+
+    if [ "$behind" -eq 0 ] && [ "$ahead" -eq 0 ]; then
+      row "$C_DIM" current "$dir"
+      current=$((current + 1))
+    elif [ "$behind" -eq 0 ]; then
+      row "$C_WARN" ahead "$dir ($ahead unpushed)"
+      unpushed+=("$dir")
+    elif [ "$ahead" -eq 0 ] && git -C "$path" merge --ff-only --quiet "$upstream" 2>/dev/null; then
+      row "$C_OK" updated "$dir (+$behind)"
+      updated=$((updated + 1))
+    else
+      row "$C_WARN" diverged "$dir ($ahead ahead, $behind behind)"
+      diverged+=("$dir")
+    fi
+  done < <(resolve)
+
+  printf '\n%s%d cloned, %d updated, %d already current%s\n' \
+    "$C_DIM" "$cloned" "$updated" "$current" "$C_OFF"
+  [ ${#dirty[@]}    -eq 0 ] || printf 'uncommitted changes: %s\n' "${dirty[*]}"
+  [ ${#unpushed[@]} -eq 0 ] || printf 'unpushed commits: %s\n' "${unpushed[*]}"
+  [ ${#diverged[@]} -eq 0 ] || printf 'diverged: %s\n' "${diverged[*]}"
+  [ ${#failed[@]}   -eq 0 ] || { printf 'failed: %s\n' "${failed[*]}"; return 1; }
+}
+
+cmd_status() {
+  local url dir src path branch ahead behind changed state ab
+  while IFS=$'\t' read -r url dir src; do
+    path="$ROOT/$dir"
+    if [ ! -d "$path/.git" ]; then
+      row "$C_ERR" missing "$dir"
+      continue
+    fi
+
+    branch=$(git -C "$path" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')
+    changed=$(git -C "$path" status --porcelain | wc -l | tr -d ' ')
+    behind=0; ahead=0
+    if ab=$(ahead_behind "$path"); then read -r behind ahead <<<"$ab"; fi
+
+    state=''
+    [ "$changed" -eq 0 ] || state="$state ${changed}~"
+    [ "$ahead"   -eq 0 ] || state="$state +${ahead}"
+    [ "$behind"  -eq 0 ] || state="$state -${behind}"
+    if [ -n "$state" ]; then
+      printf '%-28s %s%-22s%s%s\n' "$dir" "$C_WARN" "$branch" "$state" "$C_OFF"
+    else
+      printf '%-28s %s%-22s clean%s\n' "$dir" "$C_DIM" "$branch" "$C_OFF"
+    fi
+  done < <(resolve)
+}
+
+cmd_list() {
+  local url dir src
+  while IFS=$'\t' read -r url dir src; do
+    printf '%-28s %-46s %s%s%s\n' "$dir" "$url" "$C_DIM" "$(basename "$src")" "$C_OFF"
+  done < <(resolve)
+}
+
+# Directories under $ROOT that no manifest asks for.
+cmd_missing() {
+  local wanted path dir
+  wanted=$(resolve | cut -f2)
+  for path in "$ROOT"/*/; do
+    [ -d "$path" ] || continue
+    dir=$(basename "$path")
+    printf '%s\n' "$wanted" | grep -qxF "$dir" && continue
+    if [ -d "$path/.git" ]; then
+      row "$C_WARN" untracked "$dir ($(git -C "$path" remote get-url origin 2>/dev/null || echo 'no origin'))"
+    else
+      row "$C_DIM" plain "$dir (not a git repo)"
+    fi
+  done
+}
+
+# Echo the manifest that already declares $1, if any.
+declared_in() {
+  local file
+  for file in "$COMMON_LIST" "$MACHINE_LIST"; do
+    [ -f "$file" ] || continue
+    if sed -e 's/#.*//' "$file" | awk '{print $1}' | grep -qxF "$1"; then
+      printf '%s\n' "$file"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# Clone a new repo and record it in a manifest, so other machines get it too.
+cmd_clone() {
+  local target="$COMMON_LIST" repo dir url path existing default_dir
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      -m|--machine) target="$MACHINE_LIST"; shift ;;
+      -*) die "unknown option '$1'" ;;
+      *)  break ;;
+    esac
+  done
+  repo="${1:-}"; dir="${2:-}"
+  [ -n "$repo" ] || die "usage: repos clone [-m|--machine] <owner/name|url> [directory]"
+
+  url=$(url_for "$repo") || die "cannot parse '$repo' (use owner/name or a full git URL)"
+  [ -n "$dir" ] || dir="${repo##*/}"
+  dir="${dir%.git}"
+  path="$ROOT/$dir"
+
+  if existing=$(declared_in "$repo"); then
+    die "'$repo' is already declared in $(basename "$existing")"
+  fi
+  [ ! -e "$path" ] || die "$path already exists (see: repos missing)"
+
+  mkdir -p "$ROOT"
+  git clone "$url" "$path" || die "clone failed, nothing recorded"
+
+  default_dir="${repo##*/}"
+  mkdir -p "$(dirname "$target")"
+  if [ "$dir" = "${default_dir%.git}" ]; then
+    printf '%s\n' "$repo" >> "$target"
+  else
+    printf '%s\t%s\n' "$repo" "$dir" >> "$target"
+  fi
+  printf '\nrecorded %s in %s\n' "$repo" "$target"
+}
+
+cmd_each() {
+  [ $# -gt 0 ] || die "usage: repos each <command> [args...]"
+  local url dir src path
+  while IFS=$'\t' read -r url dir src; do
+    path="$ROOT/$dir"
+    [ -d "$path/.git" ] || continue
+    printf '%s=== %s%s\n' "$C_DIM" "$dir" "$C_OFF"
+    ( cd "$path" && "$@" ) || true
+  done < <(resolve)
+}
+
+cmd_help() {
+  cat <<EOF
+usage: repos <command>
+
+  sync                 clone missing repos, fetch and fast-forward the rest
+  status               branch, uncommitted count, and ahead/behind per repo
+  list                 the repos this machine wants, and where each is declared
+  missing              directories in $ROOT that no manifest asks for
+  clone [-m] <repo> [dir]  clone a new repo and record it in common.list,
+                       or in this machine's list with -m
+  each <command>       run a command in every repo
+
+this machine   $MACHINE
+root           $ROOT
+common list    $COMMON_LIST
+machine list   $MACHINE_LIST
+EOF
+}
+
+case "${1:-help}" in
+  sync)     shift; cmd_sync "$@" ;;
+  status|st) shift; cmd_status "$@" ;;
+  list|ls)  shift; cmd_list "$@" ;;
+  missing)  shift; cmd_missing "$@" ;;
+  clone)    shift; cmd_clone "$@" ;;
+  each)     shift; cmd_each "$@" ;;
+  help|-h|--help) cmd_help ;;
+  *) die "unknown command '$1' (try: repos help)" ;;
+esac

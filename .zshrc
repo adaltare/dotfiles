@@ -1,5 +1,8 @@
 # $PATH
 
+# Add personal scripts to PATH
+export PATH="$HOME/.local/bin:$PATH"
+
 # Add Bun binaries to PATH
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
@@ -59,13 +62,6 @@ _gen_fzf_default_opts() {
    --color=marker:$color0C,fg+:$color06,prompt:$color0A,hl+:$color0D"
 }
 _gen_fzf_default_opts
-
-# Add this function to ~/.zshrc
-fuzzyfind-tracked-configs() {
-  $EDITOR "$(yadm ls-files | fzf)"
-}
-zle -N fuzzyfind-tracked-configs
-bindkey '^o' fuzzyfind-tracked-configs  # Press Ctrl+O to trigger
 
 # Set bat color theme
 export BAT_THEME_DARK=base16
