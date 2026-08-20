@@ -4,3 +4,6 @@
 
 [pull]
 	rebase = true
+[alias]
+	sync = !yadm enter lazygit
+	edit = !yadm -C "$HOME" ls-files | fzf --print0 | xargs -0 -o -- "$EDITOR"
