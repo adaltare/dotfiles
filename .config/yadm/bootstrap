@@ -37,6 +37,38 @@ if ! brew bundle check --global --no-upgrade >/dev/null 2>&1; then
   brew bundle install --global
 fi
 
+# --- macOS defaults -------------------------------------------------------
+# `defaults write` is already fast and idempotent - writing the same value
+# again is a no-op for practical purposes - so there's no skip-logic here.
+# A few of these (Dock autohide, Finder's toolbar) only show visually after
+# Finder/Dock relaunch; both relaunch fresh on every login anyway, so they
+# take effect naturally on the *next* login rather than needing a killall
+# here. Edit the values below directly to change what gets set.
+if [ "$(uname -s)" = "Darwin" ]; then
+  # Finder
+  defaults write com.apple.finder AppleShowAllFiles -bool true
+  defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+  defaults write com.apple.finder ShowPathbar -bool true
+  defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+
+  # Dock, trackpad, keyboard
+  defaults write com.apple.dock autohide -bool true
+  defaults write NSGlobalDomain KeyRepeat -int 2
+  defaults write NSGlobalDomain InitialKeyRepeat -int 15
+  defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+
+  # Caps Lock -> Control. Unlike `defaults write`, hidutil's remap is a
+  # live HID property, not a stored preference - it resets on every
+  # logout/reboot, so it has to be reapplied here on every login.
+  hidutil property --set '{"UserKeyMapping":[{"HIDKeyboardModifierMappingSrc":0x700000039,"HIDKeyboardModifierMappingDst":0x7000000E0}]}' >/dev/null
+
+  # Screenshots
+  mkdir -p "$HOME/Pictures/Screenshots"
+  defaults write com.apple.screencapture location "$HOME/Pictures/Screenshots"
+  defaults write com.apple.screencapture disable-shadow -bool true
+  defaults write com.apple.screencapture type -string "png"
+fi
+
 # --- Repositories --------------------------------------------------------
 # repos sync (see ~/.local/bin/repos) does its own per-repo fetch/current
 # check, so there's nothing further to gate here.
