@@ -12,6 +12,6 @@ export PATH="/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 
 echo "=== [$(date)] login_script.sh started"
 
-"$HOME/.local/bin/repos" sync
+yadm bootstrap
 
 echo "=== [$(date)] login_script.sh finished"

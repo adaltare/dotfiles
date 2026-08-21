@@ -1,24 +1,53 @@
-#!/bin/sh
+#!/usr/bin/env bash
+#
+# yadm bootstrap - setup tasks for this machine.
+#
+# Runs via `yadm bootstrap`, and automatically at every login through
+# ~/.local/bin/login_script.sh. Because of that second caller, every step
+# here must be cheap to check and skip when there's nothing to do - keep
+# that property when adding new steps.
+#
+# A brand-new machine should still get one manual `yadm bootstrap` run
+# from an actual terminal: Homebrew's installer may need interactive input
+# that a login-time launchd run can't supply.
 
-# Add or remove packages here to install them globally
-PACKAGES="git-delta glow go helix lazygit starship tokei tree typst yadm fzf zoxide tlrc ripgrep fd bat"
+set -uo pipefail
 
-# Install homebrew and packages
-system_type=$(uname -s)
-if [ "$system_type" = "Darwin" ]; then
-  major_os_version=$(sw_vers -productVersion | cut -d. -f1)
-  if [ "$major_os_version" -gt 12 ]; then
-    if ! command -v brew >/dev/null 2>&1; then
-      echo "Installing Homebrew"
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
-    brew install $PACKAGES
+# Homebrew auto-updates itself (a real network fetch) once a day before
+# running any command, which alone can take several seconds - too slow for
+# something that runs on every login. .zshrc sets this for interactive
+# shells already, but a launchd run never sources it, so set it here too.
+export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_NO_ENV_HINTS=1
+
+# --- Homebrew ---------------------------------------------------------
+if ! command -v brew >/dev/null 2>&1; then
+  echo "Installing Homebrew"
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    [ -x "$brew_bin" ] && eval "$("$brew_bin" shellenv)" && break
+  done
+fi
+
+# brew bundle check is a fast presence check with no network calls, so it's
+# safe to run on every login; the slower install/upgrade only runs when it
+# finds something missing.
+if ! brew bundle check --global --no-upgrade >/dev/null 2>&1; then
+  echo "Installing packages from ~/.Brewfile"
+  brew bundle install --global
+fi
+
+# --- Repositories --------------------------------------------------------
+# repos sync (see ~/.local/bin/repos) does its own per-repo fetch/current
+# check, so there's nothing further to gate here.
+if [ -x "$HOME/.local/bin/repos" ]; then
+  # GitHub's SSH endpoint always exits 1 here (it denies shell access even
+  # on successful auth), so under `pipefail` piping it straight into grep
+  # would make this test fail even on a match - capture the output first.
+  github_probe=$(ssh -o BatchMode=yes -o ConnectTimeout=10 -T git@github.com 2>&1 || true)
+  if printf '%s' "$github_probe" | grep -q 'successfully authenticated'; then
+    "$HOME/.local/bin/repos" sync
   else
-    echo "Homebrew is not compatible with macOS version 12 or earlier. Using MacPorts instead."
-    if command -v port >/dev/null 2>&1; then
-      sudo port install $PACKAGES
-    else
-      echo "Please install PacPorts and run yadm bootstrap again."
-    fi
+    echo "No GitHub SSH access yet. Add a key, then run: repos sync"
   fi
 fi
