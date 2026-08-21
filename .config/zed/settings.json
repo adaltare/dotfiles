@@ -34,6 +34,11 @@
     }
   ],
   "cli_default_open_behavior": "new_window",
+  "auto_install_extensions": {
+    "harper": true,
+    "html": true,
+    "typst": true
+  },
   "collaboration_panel": {
     "dock": "right"
   },
