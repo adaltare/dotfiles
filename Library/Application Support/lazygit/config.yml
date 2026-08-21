@@ -265,15 +265,15 @@ quitOnTopLevelReturn: true
 # Config relating to things outside of Lazygit like how files are opened, copying to clipboard, etc
 os:
   # Command for editing a file. Should contain "{{filename}}".
-  edit: "zed --add {{filename}}"
+  edit: "hx {{filename}}"
   # Command for editing a file at a given line number. Should contain
   # "{{filename}}", and may optionally contain "{{line}}".
-  editAtLine: "zed --add {{filename}}:{{line}}"
+  editAtLine: "hx {{filename}}:{{line}}"
   # Same as EditAtLine, except that the command needs to wait until the
   # window is closed.
-  editAtLineAndWait: "zed --add --wait {{filename}}"
+  editAtLineAndWait: "hx {{filename}}:{{line}}"
   # For opening a directory in an editor
-  openDirInEditor: "zed --new {{filename}}"
+  openDirInEditor: "hx --working-dir {{filename}} {{filename}}"
   # A built-in preset that sets all of the above settings. Supported presets
   # are defined in the getPreset function in editor_presets.go.
   editPreset: ""
@@ -311,7 +311,7 @@ disableStartupPopups: false
 # - 'quit': exit Lazygit
 notARepository: prompt
 # If true, display a confirmation when subprocess terminates. This allows you to view the output of the subprocess before returning to Lazygit.
-promptToReturnFromSubprocess: true
+promptToReturnFromSubprocess: false
 # Keybindings
 keybinding:
   universal:
