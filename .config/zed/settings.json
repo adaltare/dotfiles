@@ -7,6 +7,7 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
+  "preferred_line_length": 80,
   "ssh_connections": [
     {
       "host": "137.184.23.147",
@@ -58,6 +59,9 @@
   },
   "diff_view_style": "unified",
   "git_panel": {
+    "scrollbar": {
+      "show": "auto"
+    },
     "dock": "right",
     "tree_view": true,
     "status_style": "icon"
@@ -89,6 +93,9 @@
     "show": true
   },
   "project_panel": {
+    "scrollbar": {
+      "show": "auto"
+    },
     "dock": "right",
     "button": true,
     "auto_open": {
@@ -108,7 +115,6 @@
     "delay_ms": 500,
     "enabled": true
   },
-  "soft_wrap": "editor_width",
   "title_bar": {
     "show_sign_in": true,
     "show_menus": true,
@@ -140,11 +146,10 @@
       "model": "claude-haiku-4.5"
     }
   },
-  // Zed's Prettier integration settings.
   "theme": {
     "mode": "dark",
-    "light": "macOS Classic Light",
-    "dark": "Material Dark"
+    "light": "One Light",
+    "dark": "One Dark"
   },
   "tabs": {
     "show_diagnostics": "errors",
@@ -169,21 +174,13 @@
   "autosave": "on_window_change",
   "format_on_save": "modifications",
   "relative_line_numbers": "disabled",
-  "buffer_font_family": "JetBrains Mono",
-  "buffer_font_fallbacks": ["Symbols Nerd Font Mono", ".ZedMono"],
   "centered_layout": {
     "left_padding": 0.2,
     "right_padding": 0.2
   },
   "scrollbar": {
     "selected_text": false,
-    "cursors": true,
-    "show": "always"
-  },
-  // allow cursor to reach edges of screen
-  // "vertical_scroll_margin": 10,
-  "inlay_hints": {
-
+    "cursors": true
   },
   "git": {
     "inline_blame": {
@@ -191,50 +188,17 @@
     }
   },
   "terminal": {
-    "toolbar": {
-
+    "scrollbar": {
+      "show": "auto"
     },
     "shell": "system",
     "font_size": 12,
-    "font_family": "JetBrains Mono",
-    "font_fallbacks": ["Symbols Nerd Font Mono", ".ZedMono"],
+    "font_family": ".ZedMono",
     "working_directory": "current_project_directory",
     "env": {"IN_ZED": "true"},
   },
-  // Minimap related settings
-  "minimap": {
-    // When to show the minimap in the editor.
-    // This setting can take three values:
-    // 1. Show the minimap if the editor's scrollbar is visible:
-    //    "auto"
-    // 2. Always show the minimap:
-    //    "always"
-    // 3. Never show the minimap:
-    //    "never" (default)
-    // When to show the minimap thumb.
-    // This setting can take two values:
-    // 1. Show the minimap thumb if the mouse is over the minimap:
-    //    "hover"
-    // 2. Always show the minimap thumb:
-    //    "always" (default)
-    // How the minimap thumb border should look.
-    // This setting can take five values:
-    // 1. Display a border on all sides of the thumb:
-    //    "thumb_border": "full"
-    // 2. Display a border on all sides except the left side of the thumb:
-    //    "thumb_border": "left_open" (default)
-    // 3. Display a border on all sides except the right side of the thumb:
-    //    "thumb_border": "right_open"
-    // 4. Display a border only on the left side of the thumb:
-    //    "thumb_border": "left_only"
-    // 5. Display the thumb without any border:
-    //    "thumb_border": "none"
-    // How to highlight the current line in the minimap.
-    // This setting can take the following values:
-    //
-    // 1. `null` to inherit the editor `current_line_highlight` setting (default)
-    // 2. "line" or "all" to highlight the current line in the minimap.
-    // 3. "gutter" or "none" to not highlight the current line in the minimap.
-    "current_line_highlight": null
-  },
+  "command_aliases": {
+    "gd": "git::Diff",
+    "lang": "language_selector::Toggle",
+  }
 }

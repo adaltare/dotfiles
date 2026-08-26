@@ -25,27 +25,6 @@
     }
   },
   {
-    "context": "Workspace",
-    "bindings": {
-      "cmd-shift-l": [
-        "task::Spawn",
-        { "task_name": "Lazygit", "reveal_target": "center" }
-      ]
-    }
-  },
-  {
-    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
-    "unbind": {
-      "shift-h": "pane::ActivatePreviousItem"
-    }
-  },
-  {
-    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
-    "unbind": {
-      "shift-l": "pane::ActivateNextItem"
-    }
-  },
-  {
     "context": "VimControl && !menu",
     "unbind": {
       "space": "vim::WrappingRight"
@@ -500,7 +479,12 @@
   {
     "context": "VimControl && !menu",
     "bindings": {
-      "s n": "vim::SelectNext"
+      "s n": [
+        "editor::SelectNext",
+        {
+          "replace_newest": false
+        }
+      ]
     }
   },
   {
@@ -512,7 +496,12 @@
   {
     "context": "VimControl && !menu",
     "bindings": {
-      "s p": "vim::SelectPrevious"
+      "s p": [
+        "editor::SelectPrevious",
+        {
+          "replace_newest": false
+        }
+      ]
     }
   },
   {
@@ -561,12 +550,6 @@
     "context": "VimControl && !menu",
     "unbind": {
       "g a": "editor::SelectAllMatches"
-    }
-  },
-  {
-    "context": "(vim_mode == helix_normal || vim_mode == helix_select) && !menu",
-    "unbind": {
-      ",": "vim::HelixKeepNewestSelection"
     }
   },
   {
@@ -623,7 +606,7 @@
       "s j": [
         "editor::SelectNext",
         {
-          "replace_newest": false
+          "replace_newest": true
         }
       ]
     }
@@ -634,7 +617,7 @@
       "s k": [
         "editor::SelectPrevious",
         {
-          "replace_newest": false
+          "replace_newest": true
         }
       ]
     }
@@ -1016,4 +999,10 @@
       "ctrl-cmd-o": "projects::OpenRecent"
     }
   },
+  {
+    "context": "VimControl && !menu",
+    "unbind": {
+      ",": "vim::RepeatFindReversed"
+    }
+  }
 ]
