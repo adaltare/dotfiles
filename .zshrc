@@ -20,7 +20,7 @@ export EDITOR=hx
 eval "$(zoxide init zsh)"
 unalias z 2> /dev/null
 unalias zi 2> /dev/null
-j() {
+cd() {
   if [ $# -gt 0 ]; then
     __zoxide_z "$*"
   else
