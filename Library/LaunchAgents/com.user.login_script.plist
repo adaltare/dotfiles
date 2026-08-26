@@ -8,7 +8,7 @@
     <array>
         <string>/bin/bash</string>
         <string>-c</string>
-        <string>$HOME/.local/bin/login_script.sh</string>
+        <string>$HOME/.config/yadm/bootstrap</string>
     </array>
     <key>RunAtLoad</key>
     <true/>

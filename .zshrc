@@ -82,6 +82,13 @@ export BUN_INSTALL="$HOME/.bun"
 autoload -U colors && colors
 PROMPT="%{$fg[green]%}%2~ %{$fg[blue]%}$>%{$reset_color%} "
 
+# Warn if the last login script run failed. The marker is written by
+# ~/.config/yadm/bootstrap and cleared on its next successful run, so
+# this keeps showing until the underlying problem is actually fixed.
+if [[ -f "$HOME/.local/state/login_script.failed" ]]; then
+  print -P "%F{yellow}⚠ login script failed%f — check it with: %F{cyan}cat /tmp/login_script.log%f"
+fi
+
 # Search with ripgrep, select results with fzf, preview with bat showing context
 z() {
     rg --line-number --no-heading --color=always --smart-case "$@" | \

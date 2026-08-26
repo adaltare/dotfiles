@@ -2,16 +2,32 @@
 #
 # yadm bootstrap - setup tasks for this machine.
 #
-# Runs via `yadm bootstrap`, and automatically at every login through
-# ~/.local/bin/login_script.sh. Because of that second caller, every step
-# here must be cheap to check and skip when there's nothing to do - keep
-# that property when adding new steps.
+# Two callers:
+#   - `yadm bootstrap`, run by hand
+#   - the com.user.login_script LaunchAgent, which runs this file directly at
+#     every login (~/Library/LaunchAgents/com.user.login_script.plist)
 #
-# A brand-new machine should still get one manual `yadm bootstrap` run
-# from an actual terminal: Homebrew's installer may need interactive input
-# that a login-time launchd run can't supply.
+# Because of that second caller, every step here must be cheap to check and
+# skip when there's nothing to do - keep that property when adding new steps.
+#
+# Logs (launchd runs only, redirected by the plist):
+#   /tmp/login_script.log and /tmp/login_script_error.log
+#
+# On failure this leaves a marker at ~/.local/state/login_script.failed;
+# .zshrc checks for it and prints a short warning at the next terminal login.
+# The marker lives under ~/.local/state rather than /tmp so that a periodic
+# /tmp cleanup can't quietly erase the evidence that something failed.
+#
+# A brand-new machine should still get one manual `yadm bootstrap` run from
+# an actual terminal: Homebrew's installer may need interactive input that a
+# login-time launchd run can't supply.
 
 set -uo pipefail
+
+# launchd runs this with a minimal environment - no ~/.zshrc, no Homebrew on
+# PATH. Prepend both Homebrew prefixes (Apple Silicon, then Intel) rather than
+# replacing PATH outright, so a manual run keeps the caller's environment.
+export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 # Homebrew auto-updates itself (a real network fetch) once a day before
 # running any command, which alone can take several seconds - too slow for
@@ -20,10 +36,23 @@ set -uo pipefail
 export HOMEBREW_NO_AUTO_UPDATE=1
 export HOMEBREW_NO_ENV_HINTS=1
 
+# Steps below deliberately keep going after a failure - a machine with no
+# network shouldn't skip its macOS defaults - so instead of `set -e` each
+# fallible step records its name here, and the Result section at the bottom
+# turns that into an exit code and the .zshrc warning marker.
+failures=""
+note_failure() { failures="$failures $1"; }
+
+fail_marker="$HOME/.local/state/login_script.failed"
+mkdir -p "$(dirname "$fail_marker")"
+
+echo "=== [$(date)] bootstrap started"
+
 # --- Homebrew ---------------------------------------------------------
 if ! command -v brew >/dev/null 2>&1; then
   echo "Installing Homebrew"
-  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" \
+    || note_failure "homebrew-install"
   for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
     [ -x "$brew_bin" ] && eval "$("$brew_bin" shellenv)" && break
   done
@@ -34,7 +63,7 @@ fi
 # finds something missing.
 if ! brew bundle check --global --no-upgrade >/dev/null 2>&1; then
   echo "Installing packages from ~/.Brewfile"
-  brew bundle install --global
+  brew bundle install --global || note_failure "brew-bundle"
 fi
 
 # --- macOS defaults -------------------------------------------------------
@@ -73,13 +102,28 @@ fi
 # repos sync (see ~/.local/bin/repos) does its own per-repo fetch/current
 # check, so there's nothing further to gate here.
 if [ -x "$HOME/.local/bin/repos" ]; then
+  [[ -d "$HOME/repos" ]] || mkdir "$HOME/repos"
+  asodfinasdofinsaodifn || note_failure "command-not-found"
   # GitHub's SSH endpoint always exits 1 here (it denies shell access even
   # on successful auth), so under `pipefail` piping it straight into grep
   # would make this test fail even on a match - capture the output first.
   github_probe=$(ssh -o BatchMode=yes -o ConnectTimeout=10 -T git@github.com 2>&1 || true)
   if printf '%s' "$github_probe" | grep -q 'successfully authenticated'; then
-    "$HOME/.local/bin/repos" sync
+    "$HOME/.local/bin/repos" sync || note_failure "repos-sync"
   else
     echo "No GitHub SSH access yet. Add a key, then run: repos sync"
+    note_failure "github-ssh"
   fi
 fi
+
+# --- Result ---------------------------------------------------------------
+if [ -n "$failures" ]; then
+  echo "bootstrap: failed step(s):$failures"
+  : > "$fail_marker"
+  echo "=== [$(date)] bootstrap finished (FAILED)"
+  exit 1
+fi
+
+rm -f "$fail_marker"
+echo "=== [$(date)] bootstrap finished (ok)"
+exit 0
