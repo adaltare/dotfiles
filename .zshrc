@@ -69,6 +69,10 @@ export BAT_THEME_DARK=base16
 # Aliases
 alias lg="lazygit"
 alias dot="yadm enter lazygit"
+alias ls="eza"
+alias ll="eza --long"
+alias la="eza --all --long"
+alias tree="eza --tree --level 3"
 
 # Bun completions
 [ -s "/Users/hermits/.bun/_bun" ] && source "/Users/hermits/.bun/_bun"
