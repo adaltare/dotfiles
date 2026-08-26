@@ -82,12 +82,58 @@ export BUN_INSTALL="$HOME/.bun"
 autoload -U colors && colors
 PROMPT="%{$fg[green]%}%2~ %{$fg[blue]%}$>%{$reset_color%} "
 
-# Warn if the last login script run failed. The marker is written by
-# ~/.config/yadm/bootstrap and cleared on its next successful run, so
-# this keeps showing until the underlying problem is actually fixed.
-if [[ -f "$HOME/.local/state/login_script.failed" ]]; then
-  print -P "%F{yellow}⚠ login script failed%f — check it with: %F{cyan}cat /tmp/login_script.log%f"
-fi
+# Status summary shown at the top of every new shell. This runs on every
+# shell start, so every check here must be local and fast - no network, no
+# fetches. Total cost is ~0.2s, nearly all of it the single yadm call.
+_login_status() {
+  # The marker is written by ~/.config/yadm/bootstrap and cleared on its next
+  # successful run, so a failure keeps showing until it's actually fixed.
+  local boot_failed=0
+  [[ -f "$HOME/.local/state/login_script.failed" ]] && boot_failed=1
+
+  # One `yadm status --porcelain --branch` yields both the uncommitted count
+  # and the ahead count; running status and rev-list separately cost twice as
+  # much. Note "up to date" here means nothing local is outstanding - it says
+  # nothing about being behind origin, since detecting that needs a fetch.
+  local yadm_ok=0 dirty=0 ahead=0 out branch_line
+  local -a lines
+  if out=$(yadm status --porcelain --branch 2>/dev/null); then
+    yadm_ok=1
+    lines=("${(@f)out}")
+    branch_line=${lines[1]}
+    dirty=$(( ${#lines} - 1 ))
+    if [[ $branch_line == *'[ahead '* ]]; then
+      ahead=${branch_line#*\[ahead }
+      ahead=${ahead%%[^0-9]*}
+    fi
+  fi
+
+  # rclone bisync has its own LaunchAgent running every 5 minutes. launchd
+  # remembers the last run's exit status, which is a far better signal than
+  # grepping its error log - that log is mostly harmless NOTICE lines.
+  local rclone_exit
+  rclone_exit=$(launchctl print "gui/${UID}/com.user.rclonebisync" 2>/dev/null \
+    | awk '/last exit code =/ {print $NF; exit}')
+
+  if (( boot_failed )); then
+    print -P "%F{yellow}⚠ config sync failed%f — check it with: %F{cyan}cat /tmp/login_script.log%f"
+  elif (( yadm_ok && dirty == 0 && ahead == 0 )); then
+    print -P "%F{green}✓ config up to date%f"
+  fi
+
+  if (( yadm_ok && (dirty > 0 || ahead > 0) )); then
+    local -a parts
+    (( dirty > 0 )) && parts+="$dirty uncommitted"
+    (( ahead > 0 )) && parts+="$ahead unpushed"
+    print -P "%F{yellow}⚠ config sync: ${(j:, :)parts}%f — review with: %F{cyan}s g%f"
+  fi
+
+  if [[ -n $rclone_exit && $rclone_exit != 0 ]]; then
+    print -P "%F{yellow}⚠ rclone bisync failed%f — check it with: %F{cyan}tail -20 /tmp/rclone-bisync-error.log%f"
+  fi
+}
+_login_status
+unset -f _login_status
 
 # Search with ripgrep, select results with fzf, preview with bat showing context
 z() {

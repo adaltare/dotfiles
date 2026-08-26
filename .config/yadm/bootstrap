@@ -103,7 +103,6 @@ fi
 # check, so there's nothing further to gate here.
 if [ -x "$HOME/.local/bin/repos" ]; then
   [[ -d "$HOME/repos" ]] || mkdir "$HOME/repos"
-  asodfinasdofinsaodifn || note_failure "command-not-found"
   # GitHub's SSH endpoint always exits 1 here (it denies shell access even
   # on successful auth), so under `pipefail` piping it straight into grep
   # would make this test fail even on a match - capture the output first.
