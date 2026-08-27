@@ -68,11 +68,17 @@ export BAT_THEME_DARK=base16
 
 # Aliases
 alias lg="lazygit"
-alias dot="yadm enter lazygit"
 alias ls="eza"
 alias ll="eza --long"
 alias la="eza --all --long"
 alias tree="eza --tree --level 3"
+
+# yadm shortcuts: (s)tatus/git, (s)etup, (s)elect-and-edit.
+# `se` is single-quoted so $HOME and $EDITOR are read when the alias runs
+# rather than when this file is sourced.
+alias sg="yadm enter lazygit"
+alias ss="yadm bootstrap"
+alias se='yadm -C "$HOME" ls-files | fzf --print0 | xargs -0 -o -- "$EDITOR"'
 
 # Bun completions
 [ -s "/Users/hermits/.bun/_bun" ] && source "/Users/hermits/.bun/_bun"
@@ -116,20 +122,20 @@ _login_status() {
     | awk '/last exit code =/ {print $NF; exit}')
 
   if (( boot_failed )); then
-    print -P "%F{yellow}⚠ config sync failed%f — check it with: %F{cyan}cat /tmp/login_script.log%f"
+    print -P "%F{yellow}⚠ Failed to sync configs%f  Check errors with %F{cyan}cat /tmp/login_script.log%f"
   elif (( yadm_ok && dirty == 0 && ahead == 0 )); then
-    print -P "%F{green}✓ config up to date%f"
+    # print -P "%F{green}✓ config up to date%f"
   fi
 
   if (( yadm_ok && (dirty > 0 || ahead > 0) )); then
     local -a parts
     (( dirty > 0 )) && parts+="$dirty uncommitted"
     (( ahead > 0 )) && parts+="$ahead unpushed"
-    print -P "%F{yellow}⚠ config sync: ${(j:, :)parts}%f — review with: %F{cyan}s g%f"
+    print -P "%F{yellow}⚠ Unsynced configs: ${(j:, :)parts}%f — review with: %F{cyan}sg%f"
   fi
 
   if [[ -n $rclone_exit && $rclone_exit != 0 ]]; then
-    print -P "%F{yellow}⚠ rclone bisync failed%f — check it with: %F{cyan}tail -20 /tmp/rclone-bisync-error.log%f"
+    print -P "%F{yellow}⚠ Failed to sync documents%f — check rclone with: %F{cyan}tail -20 /tmp/rclone-bisync-error.log%f"
   fi
 }
 _login_status

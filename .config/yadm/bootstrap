@@ -119,10 +119,10 @@ fi
 if [ -n "$failures" ]; then
   echo "bootstrap: failed step(s):$failures"
   : > "$fail_marker"
-  echo "=== [$(date)] bootstrap finished (FAILED)"
+  # echo "=== [$(date)] bootstrap finished (FAILED)"
   exit 1
 fi
 
 rm -f "$fail_marker"
-echo "=== [$(date)] bootstrap finished (ok)"
+# echo "=== [$(date)] bootstrap finished (ok)"
 exit 0
