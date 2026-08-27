@@ -91,8 +91,28 @@ cmd_sync() {
   local url dir src path upstream behind ahead ab
   local -a dirty=() diverged=() unpushed=() failed=()
   local cloned=0 updated=0 current=0
+  local fetch_dir rc_file fetch_rc
 
   mkdir -p "$ROOT"
+
+  # Fetch every existing repo up front, in parallel. A fetch that finds
+  # nothing new is almost pure network latency, so running them concurrently
+  # is what keeps sync fast as the manifest grows - sequentially, each repo
+  # adds its full round-trip to the total. ~/.ssh/config multiplexes these
+  # over one SSH connection. Each result is recorded so the pass below can
+  # still report per-repo failures accurately.
+  fetch_dir=$(mktemp -d "${TMPDIR:-/tmp}/repos-fetch.XXXXXX")
+  # The `if` here matters: a bare `[ -d ... ] && printf` would leave the loop
+  # exiting non-zero whenever the last declared repo isn't cloned yet, which
+  # under `set -e` aborts the whole sync before it can clone anything.
+  resolve | cut -f2 | while IFS= read -r dir; do
+    if [ -d "$ROOT/$dir/.git" ]; then printf '%s\n' "$dir"; fi
+  done | REPOS_FETCH_ROOT="$ROOT" REPOS_FETCH_DIR="$fetch_dir" \
+    xargs -P "${REPOS_JOBS:-8}" -I{} bash -c '
+      git -C "$REPOS_FETCH_ROOT/$1" fetch --quiet --prune origin 2>/dev/null
+      printf %s "$?" > "$REPOS_FETCH_DIR/$(printf %s "$1" | tr / _)"
+    ' _ {}
+
   while IFS=$'\t' read -r url dir src; do
     path="$ROOT/$dir"
 
@@ -112,7 +132,16 @@ cmd_sync() {
       continue
     fi
 
-    if ! git -C "$path" fetch --quiet --prune origin; then
+    # Use the parallel prefetch result; fall back to fetching inline if this
+    # repo somehow wasn't covered (e.g. it appeared since prefetch ran).
+    rc_file="$fetch_dir/$(printf %s "$dir" | tr / _)"
+    if [ -f "$rc_file" ]; then
+      fetch_rc=$(cat "$rc_file")
+    else
+      git -C "$path" fetch --quiet --prune origin 2>/dev/null
+      fetch_rc=$?
+    fi
+    if [ "$fetch_rc" != 0 ]; then
       row "$C_ERR" fail "$dir (fetch failed)"
       failed+=("$dir")
       continue
@@ -146,6 +175,8 @@ cmd_sync() {
       diverged+=("$dir")
     fi
   done < <(resolve)
+
+  rm -rf "$fetch_dir"
 
   printf '\n%s%d cloned, %d updated, %d already current%s\n' \
     "$C_DIM" "$cloned" "$updated" "$current" "$C_OFF"
