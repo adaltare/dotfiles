@@ -1,4 +1,4 @@
-theme = "onedark"
+theme = "gruvbox_dark_soft"
 
 [editor]
   auto-save = true

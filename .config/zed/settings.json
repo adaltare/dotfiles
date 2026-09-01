@@ -7,6 +7,29 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
+  "theme_overrides": {
+    "Gruvbox Dark Soft": {
+      "border": "#3b3735ff",
+      "border.focused": "#259962FF",
+      "border.selected": "#259962FF",
+      "panel.focused_border": "#259962FF",
+      "pane.focused_border": "#259962FF"
+    }
+  },
+  "ui_font_family": "Avenir Next",
+  "markdown_preview_font_family": "Annai MN",
+  "buffer_font_family": ".ZedMono",
+  "ui_font_weight": 400.0,
+  "vim_mode": false,
+  "file_finder": {
+    "file_icons": true
+  },
+  "debugger": {
+    "button": true
+  },
+  "diagnostics": {
+    "button": true
+  },
   "preferred_line_length": 80,
   "ssh_connections": [
     {
@@ -67,10 +90,14 @@
     "status_style": "icon"
   },
   "status_bar": {
+    "show_active_file": false,
+    "line_endings_button": false,
+    "cursor_position_button": false,
     "active_language_button": true,
-    "cursor_position_button": false
+    "experimental.show": false,
   },
   "toolbar": {
+    "breadcrumbs": true,
     "quick_actions": false
   },
   "selection_highlight": false,
@@ -83,18 +110,32 @@
   "multi_cursor_modifier": "cmd_or_ctrl",
   "current_line_highlight": "all",
   "minimum_contrast_for_highlights": 45.0,
-  "rounded_selection": false,
+  "rounded_selection": true,
   "search": {
+    "button": true,
     "center_on_match": false
   },
   "tab_bar": {
     "show_tab_bar_buttons": false,
     "show_nav_history_buttons": false,
-    "show": true
+    "show": false
   },
   "project_panel": {
+    "sort_mode": "directories_first",
+    "hide_root": true,
+    "indent_guides": {
+      "show": "never"
+    },
+    "diagnostic_badges": false,
+    "show_diagnostics": "off",
+    "bold_folder_labels": false,
+    "starts_open": false,
+    "indent_size": 20.0,
+    "git_status": true,
+    "folder_icons": true,
+    "default_width": 300.0,
     "scrollbar": {
-      "show": "auto"
+      "show": "never"
     },
     "dock": "right",
     "button": true,
@@ -108,8 +149,8 @@
   },
   "icon_theme": {
     "mode": "dark",
-    "light": "Zed (Default)",
-    "dark": "Zed (Default)"
+    "light": "Catppuccin Macchiato",
+    "dark": "Catppuccin Frappé"
   },
   "which_key": {
     "delay_ms": 500,
@@ -149,7 +190,7 @@
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "One Dark"
+    "dark": "Gruvbox Dark Soft"
   },
   "tabs": {
     "show_diagnostics": "errors",
@@ -157,8 +198,8 @@
     "file_icons": true,
     "git_status": true
   },
-  "ui_font_size": 15,
-  "buffer_font_size": 15,
+  "ui_font_size": 16.0,
+  "buffer_font_size": 16.0,
   "helix_mode": true,
   "vim": {
     "use_system_clipboard": "never",
@@ -183,11 +224,13 @@
     "cursors": true
   },
   "git": {
+    "diff_base": "head",
     "inline_blame": {
       "enabled": false
     }
   },
   "terminal": {
+    "button": true,
     "scrollbar": {
       "show": "auto"
     },
@@ -200,5 +243,29 @@
   "command_aliases": {
     "gd": "git::Diff",
     "lang": "language_selector::Toggle",
+  },
+  "profiles": {
+    "Writing": {
+      "settings": {
+        "buffer_font_family": "Chalkboard",
+        "cursor_shape": "bar",
+        "git": {
+          "disable_git": true,
+        },
+        "disable_ai": true,
+        "buffer_font_size": 16.0,
+        "ui_font_size": 16.0,
+        "theme": "Gruvbox Dark Soft",
+        "tab_bar": { "show": false },
+        "toolbar": { "breadcrumbs": false },
+        "status_bar": {
+          "experimental.show": false
+        },
+        "title_bar": {
+          "show_user_menu": false,
+          "show_project_items": false,
+        },
+      }
+    }
   }
 }

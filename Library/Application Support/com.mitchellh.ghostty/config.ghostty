@@ -1,5 +1,4 @@
-config-file = ?auto/theme.ghostty
-
+theme = Gruvbox Material
 window-padding-x = 8
 window-padding-y = 8
 keybind = global:cmd+backquote=toggle_quick_terminal
