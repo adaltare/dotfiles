@@ -146,7 +146,7 @@
   {
     "context": "ProjectPanel && not_editing",
     "bindings": {
-      "backspace": [
+      "d": [
         "project_panel::Delete",
         {
           "skip_prompt": false
@@ -446,12 +446,6 @@
     "context": "Workspace",
     "unbind": {
       "cmd-?": "agent::ToggleFocus"
-    }
-  },
-  {
-    "context": "Workspace",
-    "bindings": {
-      "cmd-`": "terminal_panel::Toggle"
     }
   },
   {
@@ -955,7 +949,7 @@
   {
     "context": "ProjectPanel && not_editing",
     "bindings": {
-      "shift-backspace": [
+      "shift-d": [
         "project_panel::Delete",
         {
           "skip_prompt": true
@@ -967,12 +961,6 @@
     "context": "ProjectPanel && not_editing",
     "unbind": {
       "shift-d": "project_panel::Delete"
-    }
-  },
-  {
-    "context": "ProjectPanel && not_editing",
-    "bindings": {
-      "d": "project_panel::Cut"
     }
   },
   {
