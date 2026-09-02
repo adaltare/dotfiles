@@ -1,6 +1,8 @@
 theme = Gruvbox Dark
 window-padding-x = 8
 window-padding-y = 8
-keybind = global:cmd+backquote=toggle_quick_terminal
 quick-terminal-position = left
 quick-terminal-size = 30%
+macos-titlebar-proxy-icon = hidden
+macos-hidden = always
+keybind = cmd+,=text:ghostty +edit-config\n
