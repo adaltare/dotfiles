@@ -67,6 +67,7 @@ _gen_fzf_default_opts
 export BAT_THEME_DARK=base16
 
 # Aliases
+alias xdg-open="open"
 alias lg="lazygit"
 alias ls="eza"
 alias ll="eza --long"

@@ -7,6 +7,11 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
+  "use_system_window_tabs": true,
+  "when_closing_with_no_tabs": "close_window",
+  "use_system_prompts": false,
+  "on_last_window_closed": "quit_app",
+  "use_system_path_prompts": false,
   "theme_overrides": {
     "Gruvbox Dark Soft": {
       "border": "#3b3735ff",
@@ -129,7 +134,6 @@
     "diagnostic_badges": false,
     "show_diagnostics": "off",
     "bold_folder_labels": false,
-    "starts_open": false,
     "indent_size": 20.0,
     "git_status": true,
     "folder_icons": true,
@@ -244,6 +248,38 @@
     "gd": "git::Diff",
     "lang": "language_selector::Toggle",
   },
+	"lsp": {
+		"tinymist": {
+			"initialization_options": {
+				// Enable background preview
+				// Server will be running on 127.0.0.1:23635
+				"preview": {
+					"background": {
+						"enabled": true,
+						"args": ["--data-plane-host=127.0.0.1:23635", "--invert-colors=never"],
+					},
+					"partialRendering": true,
+					"refresh": "onSave",
+				},
+			},
+  
+			"settings": {
+				// Compile on save
+				// This will compile a PDF for the `main.typ` file in the project root.
+				"exportPdf": "onSave",
+				"outputPath": "$root/$name",
+  
+				// Enable formatter
+				"formatterMode": "typstyle",
+			}
+		}
+	},
+	"languages": {
+		"Typst": {
+			// Disable soft wrap
+			"soft_wrap": "none",
+		},
+	},
   "profiles": {
     "Writing": {
       "settings": {
