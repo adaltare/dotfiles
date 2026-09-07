@@ -81,8 +81,10 @@ alias sg="yadm enter lazygit"
 alias ss="yadm bootstrap"
 alias se='yadm -C "$HOME" ls-files | fzf --print0 | xargs -0 -o -- "$EDITOR"'
 
-# Bun completions
-[ -s "/Users/hermits/.bun/_bun" ] && source "/Users/hermits/.bun/_bun"
+# Bun
+# No completions line here: the old one sourced /Users/hermits/.bun/_bun - a
+# stale username from another machine - and ~/.bun/_bun does not exist anyway,
+# since bun comes from Homebrew now. It was dead code either way.
 export BUN_INSTALL="$HOME/.bun"
 
 # Very simple prompt
@@ -139,7 +141,7 @@ _login_status() {
     print -P "%F{yellow}⚠ Failed to sync documents%f — check rclone with: %F{cyan}tail -20 /tmp/rclone-bisync-error.log%f"
   fi
 }
-_login_status
+# _login_status
 unset -f _login_status
 
 # Search with ripgrep, select results with fzf, preview with bat showing context
