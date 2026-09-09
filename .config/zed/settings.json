@@ -118,7 +118,8 @@
   "rounded_selection": true,
   "search": {
     "button": true,
-    "center_on_match": false
+    "center_on_match": false,
+    "search_on_type": false,
   },
   "tab_bar": {
     "show_tab_bar_buttons": false,
@@ -126,6 +127,7 @@
     "show": false
   },
   "project_panel": {
+    "folder_indicator": "icon",
     "sort_mode": "directories_first",
     "hide_root": true,
     "indent_guides": {
@@ -136,7 +138,6 @@
     "bold_folder_labels": false,
     "indent_size": 20.0,
     "git_status": true,
-    "folder_icons": true,
     "default_width": 300.0,
     "scrollbar": {
       "show": "never"
