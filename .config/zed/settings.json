@@ -187,9 +187,10 @@
     },
     "default_profile": "ask",
     "default_model": {
-      "enable_thinking": false,
-      "provider": "copilot_chat",
-      "model": "claude-haiku-4.5"
+      "effort": "medium",
+      "enable_thinking": true,
+      "provider": "openai",
+      "model": "gpt-5.5"
     }
   },
   "theme": {
