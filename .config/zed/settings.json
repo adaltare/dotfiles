@@ -7,7 +7,17 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
-  "markdown_preview_font_size": 15.0,
+  "autosave": "on_window_change",
+  "format_on_save": "modifications_if_available",
+  "restore_on_startup": "launchpad",
+  "diff_view_style": "unified",
+  "cursor_animation": {
+    "enabled": true,
+  },
+  "markdown_preview": {
+    "open_markdown_files_in_preview": true,
+    "font_size": 15.0,
+  },
   "use_system_window_tabs": true,
   "when_closing_with_no_tabs": "close_window",
   "use_system_prompts": false,
@@ -19,21 +29,19 @@
       "border.focused": "#259962FF",
       "border.selected": "#259962FF",
       "panel.focused_border": "#259962FF",
-      "pane.focused_border": "#259962FF"
-    }
+      "pane.focused_border": "#259962FF",
+    },
   },
-  "ui_font_family": "Avenir Next",
-  "buffer_font_family": ".ZedMono",
   "ui_font_weight": 400.0,
   "vim_mode": false,
   "file_finder": {
-    "file_icons": true
+    "file_icons": true,
   },
   "debugger": {
-    "button": true
+    "button": true,
   },
   "diagnostics": {
-    "button": true
+    "button": true,
   },
   "preferred_line_length": 80,
   "ssh_connections": [
@@ -43,11 +51,9 @@
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/forge/metricslite.on-forge.com"
-          ]
-        }
-      ]
+          "paths": ["/home/forge/metricslite.on-forge.com"],
+        },
+      ],
     },
     {
       "host": "143.244.213.88",
@@ -55,21 +61,19 @@
       "args": [],
       "projects": [
         {
-          "paths": [
-            "/home/forge/impact.edcarm.org/current/./"
-          ]
-        }
-      ]
-    }
+          "paths": ["/home/forge/impact.edcarm.org/current/./"],
+        },
+      ],
+    },
   ],
   "cli_default_open_behavior": "new_window",
   "auto_install_extensions": {
-    "harper": true,
     "html": true,
-    "typst": true
+    "typst": true,
   },
   "collaboration_panel": {
-    "dock": "right"
+    "default_width": 240.0,
+    "dock": "right",
   },
   "agent_servers": {
     "claude-acp": {
@@ -77,38 +81,38 @@
         "effort": "medium",
         "fast": false,
         "mode": "auto",
-        "model": "sonnet"
+        "model": "sonnet",
       },
-      "type": "registry"
-    }
+      "type": "registry",
+    },
   },
   "calls": {
-    "mute_on_join": true
+    "mute_on_join": true,
   },
-  "diff_view_style": "unified",
   "git_panel": {
+    "default_width": 300.0,
     "scrollbar": {
-      "show": "auto"
+      "show": "auto",
     },
-    "dock": "right",
-    "tree_view": true,
-    "status_style": "icon"
+    "dock": "left",
+    "tree_view": false,
+    "status_style": "icon",
   },
   "status_bar": {
     "show_active_file": false,
     "line_endings_button": false,
     "cursor_position_button": false,
     "active_language_button": true,
-    "experimental.show": false,
+    // "experimental.show": false,
   },
   "toolbar": {
     "breadcrumbs": true,
-    "quick_actions": false
+    "quick_actions": false,
   },
   "selection_highlight": false,
   "gutter": {
     "folds": false,
-    "line_numbers": false
+    "line_numbers": false,
   },
   "scroll_beyond_last_line": "vertical_scroll_margin",
   "cursor_blink": false,
@@ -124,88 +128,122 @@
   "tab_bar": {
     "show_tab_bar_buttons": false,
     "show_nav_history_buttons": false,
-    "show": false
+    "show": true,
   },
   "project_panel": {
-    "folder_indicator": "icon",
+    "sort_order": "default",
+    "starts_open": false,
     "sort_mode": "directories_first",
-    "hide_root": true,
     "indent_guides": {
-      "show": "never"
+      "show": "never",
     },
     "diagnostic_badges": false,
-    "show_diagnostics": "off",
     "bold_folder_labels": false,
     "indent_size": 20.0,
-    "git_status": true,
+    "git_status": false,
     "default_width": 300.0,
     "scrollbar": {
-      "show": "never"
+      "show": "auto",
     },
-    "dock": "right",
+    "dock": "left",
     "button": true,
     "auto_open": {
+      "on_create": false,
       "on_drop": false,
-      "on_paste": false
+      "on_paste": false,
     },
     "file_icons": true,
     "entry_spacing": "comfortable",
-    "hide_gitignore": false
+    "hide_gitignore": false,
   },
   "icon_theme": {
     "mode": "dark",
     "light": "Catppuccin Macchiato",
-    "dark": "Catppuccin Frappé"
+    "dark": "Catppuccin Frappé",
   },
   "which_key": {
     "delay_ms": 500,
-    "enabled": true
+    "enabled": false,
   },
   "title_bar": {
     "show_sign_in": true,
     "show_menus": true,
     "show_user_menu": true,
-    "show_user_picture": false
+    "show_user_picture": false,
   },
-  "context_servers": {
-
-  },
+  "context_servers": {},
   "outline_panel": {
-    "dock": "right"
+    "file_icons": true,
+    "button": true,
+    "dock": "right",
   },
   "show_edit_predictions": false,
   "agent": {
+    "default_width": 600.0,
+    "limit_content_width": false,
+    "threads_sidebar": {
+      "position": "right",
+    },
+    "tool_permissions": {
+      "default": "allow",
+      "tools": {
+        "fetch": {
+          "default": "confirm",
+        },
+        "search_web": {
+          "default": "confirm",
+        },
+        "skill": {
+          "default": "allow",
+        },
+        "create_directory": {
+          "always_allow": [
+            {
+              "pattern": "^library\\.edcarm\\.org/resources/views/",
+            },
+          ],
+        },
+        "delete_path": {
+          "always_allow": [
+            {
+              "pattern": "^library\\.edcarm\\.org/",
+            },
+          ],
+        },
+        "terminal": {
+          "default": "allow",
+        },
+      },
+    },
     "expand_edit_card": false,
     "expand_terminal_card": false,
     "terminal_init_command": "",
     "show_turn_stats": true,
-    "use_modifier_to_send": true,
-    "dock": "left",
+    "dock": "right",
     "inline_assistant_model": {
       "provider": "zed.dev",
-      "model": "grok-code-fast-1"
+      "model": "grok-code-fast-1",
     },
     "default_profile": "ask",
     "default_model": {
       "effort": "medium",
       "enable_thinking": true,
       "provider": "openai",
-      "model": "gpt-5.5"
-    }
+      "model": "gpt-5.6-sol",
+    },
   },
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Gruvbox Dark"
+    "dark": "Gruvbox Dark",
   },
   "tabs": {
     "show_diagnostics": "errors",
     "close_position": "right",
     "file_icons": true,
-    "git_status": true
+    "git_status": true,
   },
   "ui_font_size": 16.0,
-  "buffer_font_size": 16.0,
   "helix_mode": true,
   "vim": {
     "use_system_clipboard": "never",
@@ -215,73 +253,72 @@
     "highlight_on_yank_duration": 200,
     "custom_digraphs": {},
     "cursor_shape": {
-      "visual": "block"
-    }
+      "visual": "block",
+    },
   },
-  "autosave": "on_window_change",
-  "format_on_save": "modifications",
   "relative_line_numbers": "disabled",
   "centered_layout": {
     "left_padding": 0.2,
-    "right_padding": 0.2
+    "right_padding": 0.2,
   },
   "scrollbar": {
     "selected_text": false,
-    "cursors": true
+    "cursors": true,
   },
   "git": {
     "diff_base": "head",
     "inline_blame": {
-      "enabled": false
-    }
+      "enabled": false,
+    },
   },
   "terminal": {
+    "font_size": 14.0,
     "button": true,
     "scrollbar": {
-      "show": "auto"
+      "show": "auto",
     },
     "shell": "system",
-    "font_size": 12,
-    "font_family": ".ZedMono",
     "working_directory": "current_project_directory",
-    "env": {"IN_ZED": "true"},
+    "env": { "IN_ZED": "true" },
   },
   "command_aliases": {
     "gd": "git::Diff",
     "lang": "language_selector::Toggle",
   },
-	"lsp": {
-		"tinymist": {
-			"initialization_options": {
-				// Enable background preview
-				// Server will be running on 127.0.0.1:23635
-				"preview": {
-					"background": {
-						"enabled": true,
-						"args": ["--data-plane-host=127.0.0.1:23635", "--invert-colors=never"],
-					},
-					"partialRendering": true,
-					"refresh": "onSave",
-				},
-			},
-  
-			"settings": {
-				// Compile on save
-				// This will compile a PDF for the `main.typ` file in the project root.
-				"exportPdf": "onSave",
-				"outputPath": "$root/$name",
-  
-				// Enable formatter
-				"formatterMode": "typstyle",
-			}
-		}
-	},
-	"languages": {
-		"Typst": {
-			// Disable soft wrap
-			"soft_wrap": "none",
-		},
-	},
+  "lsp": {
+    "tinymist": {
+      "initialization_options": {
+        // Enable background preview
+        // Server will be running on 127.0.0.1:23635
+        "preview": {
+          "background": {
+            "enabled": true,
+            "args": [
+              "--data-plane-host=127.0.0.1:23635",
+              "--invert-colors=never",
+            ],
+          },
+          "partialRendering": true,
+          "refresh": "onSave",
+        },
+      },
+
+      "settings": {
+        // Compile on save
+        // This will compile a PDF for the `main.typ` file in the project root.
+        "exportPdf": "onSave",
+        "outputPath": "$root/$dir/target/$name",
+
+        // Enable formatter
+        "formatterMode": "typstyle",
+      },
+    },
+  },
+  "languages": {
+    "Typst": {
+      "soft_wrap": "none",
+    },
+  },
   "profiles": {
     "Writing": {
       "settings": {
@@ -293,17 +330,21 @@
         "disable_ai": true,
         "buffer_font_size": 16.0,
         "ui_font_size": 16.0,
-        "theme": "Gruvbox Dark Soft",
+        "theme": {
+          "mode": "light",
+          "light": "Gruvbox Light Soft",
+          "dark": "Gruvbox Dark Soft",
+        },
         "tab_bar": { "show": false },
         "toolbar": { "breadcrumbs": false },
         "status_bar": {
-          "experimental.show": false
+          "experimental.show": false,
         },
         "title_bar": {
           "show_user_menu": false,
           "show_project_items": false,
         },
-      }
-    }
-  }
+      },
+    },
+  },
 }
