@@ -49,6 +49,7 @@ end
 # silently decline to fix it. --move makes the final order deterministic whether
 # fish is the login shell or a nested shell.
 fish_add_path --global --move --path $HOME/.local/bin
+fish_add_path --global --move --path $HOME/.local/bin/roc_nightly-macos_apple_silicon-2026-09-18-1d982dc
 
 # Bun. NOTE: bun currently comes from Homebrew and ~/.bun/bin does not exist -
 # only ~/.bun/install. This line is kept because fish_add_path ignores
