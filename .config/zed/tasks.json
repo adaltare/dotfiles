@@ -1,12 +1,20 @@
-// Static tasks configuration.
-//
-// Example:
 [
   {
     "label": "Lazygit",
     "command": "lazygit",
     "reveal": "always",
     "hide": "always",
-    "use_new_terminal": true
-  }
+    "use_new_terminal": true,
+  },
+  {
+    "label": "Markdown to PDF",
+    "command": "echo '#import \"@preview/cmarker:0.1.10\"\n#cmarker.render(read(\"$ZED_FILE\"))' > '/tmp/$ZED_STEM.typ' && typst compile --root / '/tmp/$ZED_STEM.typ' && open '/tmp/$ZED_STEM.pdf'",
+    // "command": "false",
+    "use_new_terminal": true,
+    "reveal": "never",
+    "hide": "never",
+    // "show_summary": true,
+    "show_command": false,
+    "save": "current",
+  },
 ]
