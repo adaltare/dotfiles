@@ -7,10 +7,18 @@
 // custom settings, run `zed: open default settings` from the
 // command palette
 {
+  "horizontal_scroll_margin": 5.0,
+  "close_panel_on_toggle": true,
+  "window_title_format": "${projectName}${separator}${fileName}",
+  "use_smartcase_search": true,
+  "bottom_dock_layout": "full",
+  "max_tabs": 6,
+  "use_autoclose": true,
+  "use_auto_surround": false,
   "autosave": "on_window_change",
   "format_on_save": "modifications_if_available",
   "restore_on_startup": "launchpad",
-  "diff_view_style": "unified",
+  "diff_view_style": "split",
   "cursor_animation": {
     "enabled": true,
   },
@@ -18,14 +26,13 @@
     "open_markdown_files_in_preview": true,
     "font_size": 15.0,
   },
-  "use_system_window_tabs": true,
   "when_closing_with_no_tabs": "close_window",
   "use_system_prompts": false,
   "on_last_window_closed": "quit_app",
   "use_system_path_prompts": false,
   "theme_overrides": {
     "Gruvbox Dark Soft": {
-      "border": "#3b3735ff",
+      // "border": "#3b3735ff",
       "border.focused": "#259962FF",
       "border.selected": "#259962FF",
       "panel.focused_border": "#259962FF",
@@ -81,7 +88,7 @@
         "effort": "medium",
         "fast": false,
         "mode": "auto",
-        "model": "sonnet",
+        "model": "opus",
       },
       "type": "registry",
     },
@@ -90,18 +97,20 @@
     "mute_on_join": true,
   },
   "git_panel": {
+    "dock": "left",
+    "entry_primary_click_action": "view_file",
+    "file_icons": false,
     "default_width": 300.0,
     "scrollbar": {
       "show": "auto",
     },
-    "dock": "left",
-    "tree_view": false,
+    "tree_view": true,
     "status_style": "icon",
   },
   "status_bar": {
+    "cursor_position_button": false,
     "show_active_file": false,
     "line_endings_button": false,
-    "cursor_position_button": false,
     "active_language_button": true,
     // "experimental.show": false,
   },
@@ -122,13 +131,13 @@
   "rounded_selection": true,
   "search": {
     "button": true,
-    "center_on_match": false,
+    "center_on_match": true,
     "search_on_type": false,
   },
   "tab_bar": {
     "show_tab_bar_buttons": false,
     "show_nav_history_buttons": false,
-    "show": true,
+    "show": false,
   },
   "project_panel": {
     "sort_order": "default",
@@ -140,7 +149,6 @@
     "diagnostic_badges": false,
     "bold_folder_labels": false,
     "indent_size": 20.0,
-    "git_status": false,
     "default_width": 300.0,
     "scrollbar": {
       "show": "auto",
@@ -163,11 +171,15 @@
   },
   "which_key": {
     "delay_ms": 500,
-    "enabled": false,
+    "enabled": true,
   },
   "title_bar": {
+    "show_onboarding_banner": true,
+    "show_project_items": true,
+    "show_worktree_name": false,
+    "show_branch_name": true,
+    "show_branch_status_icon": false,
     "show_sign_in": true,
-    "show_menus": true,
     "show_user_menu": true,
     "show_user_picture": false,
   },
@@ -175,12 +187,16 @@
   "outline_panel": {
     "file_icons": true,
     "button": true,
-    "dock": "right",
+    "dock": "left",
   },
   "show_edit_predictions": false,
   "agent": {
+    "flexible": false,
+    "auto_compact": {
+      "threshold": "75%",
+    },
     "default_width": 600.0,
-    "limit_content_width": false,
+    "limit_content_width": true,
     "threads_sidebar": {
       "position": "right",
     },
@@ -221,27 +237,22 @@
     "show_turn_stats": true,
     "dock": "right",
     "inline_assistant_model": {
-      "provider": "zed.dev",
-      "model": "grok-code-fast-1",
+      "provider": "openai",
+      "model": "gpt-5.5",
     },
     "default_profile": "ask",
     "default_model": {
       "effort": "medium",
       "enable_thinking": true,
       "provider": "openai",
-      "model": "gpt-5.6-sol",
+      "model": "gpt-5.6-luna",
     },
   },
-  "theme": {
-    "mode": "dark",
-    "light": "One Light",
-    "dark": "Gruvbox Dark",
-  },
+  "theme": "Gruvbox Dark",
   "tabs": {
-    "show_diagnostics": "errors",
-    "close_position": "right",
     "file_icons": true,
-    "git_status": true,
+    "show_diagnostics": "off",
+    "close_position": "right",
   },
   "ui_font_size": 16.0,
   "helix_mode": true,
@@ -266,6 +277,7 @@
     "cursors": true,
   },
   "git": {
+    "show_stage_restore_buttons": true,
     "diff_base": "head",
     "inline_blame": {
       "enabled": false,
