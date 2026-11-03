@@ -8,9 +8,6 @@
 # Homebrew first, then ~/.local/bin, so ~/.local/bin ends up in front.
 set -q HOMEBREW_PREFIX; or /opt/homebrew/bin/brew shellenv fish | source
 fish_add_path --global --move --path $HOME/.local/bin
-fish_add_path --global --move --path $HOME/.local/bin/roc_nightly-macos_apple_silicon-2026-09-18-1d982dc
-set -gx BUN_INSTALL $HOME/.bun
-fish_add_path --global --move --path $BUN_INSTALL/bin
 
 set -gx EDITOR hx
 set -gx HOMEBREW_NO_AUTO_UPDATE 1
@@ -102,11 +99,5 @@ function login_status --description 'Local dotfile / sync health summary'
         if set -q parts[1]
             echo (set_color yellow)"⚠ Unsynced configs: "(string join ', ' $parts)(set_color normal)" — review with: "(set_color cyan)"sg"(set_color normal)
         end
-    end
-
-    set -l rclone_exit (launchctl print "gui/"(id -u)"/com.user.rclonebisync" 2>/dev/null \
-        | awk '/last exit code =/ {print $NF; exit}')
-    if test -n "$rclone_exit"; and test "$rclone_exit" != 0
-        echo (set_color yellow)"⚠ Failed to sync documents"(set_color normal)" — check rclone with: "(set_color cyan)"tail -20 /tmp/rclone-bisync-error.log"(set_color normal)
     end
 end
