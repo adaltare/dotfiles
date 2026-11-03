@@ -14,7 +14,8 @@
 #   /tmp/login_script.log and /tmp/login_script_error.log
 #
 # On failure this leaves a marker at ~/.local/state/login_script.failed;
-# .zshrc checks for it and prints a short warning at the next terminal login.
+# the fish greeting (login_status in config.fish) checks for it and prints a
+# short warning in the next terminal.
 # The marker lives under ~/.local/state rather than /tmp so that a periodic
 # /tmp cleanup can't quietly erase the evidence that something failed.
 #
@@ -24,14 +25,14 @@
 
 set -uo pipefail
 
-# launchd runs this with a minimal environment - no ~/.zshrc, no Homebrew on
+# launchd runs this with a minimal environment - no shell config, no Homebrew on
 # PATH. Prepend both Homebrew prefixes (Apple Silicon, then Intel) rather than
 # replacing PATH outright, so a manual run keeps the caller's environment.
 export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
 
 # Homebrew auto-updates itself (a real network fetch) once a day before
 # running any command, which alone can take several seconds - too slow for
-# something that runs on every login. .zshrc sets this for interactive
+# something that runs on every login. config.fish sets this for interactive
 # shells already, but a launchd run never sources it, so set it here too.
 export HOMEBREW_NO_AUTO_UPDATE=1
 export HOMEBREW_NO_ENV_HINTS=1
@@ -39,7 +40,7 @@ export HOMEBREW_NO_ENV_HINTS=1
 # Steps below deliberately keep going after a failure - a machine with no
 # network shouldn't skip its macOS defaults - so instead of `set -e` each
 # fallible step records its name here, and the Result section at the bottom
-# turns that into an exit code and the .zshrc warning marker.
+# turns that into an exit code and the login_status warning marker.
 failures=""
 note_failure() { failures="$failures $1"; }
 

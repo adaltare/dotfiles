@@ -5,9 +5,6 @@
 !/.gitignore
 !/.hushlogin
 !/.ssh
-!/.zprofile
-!/.zsh_history
-!/.zshrc
 !/Desktop
 !/Documents
 !/Downloads

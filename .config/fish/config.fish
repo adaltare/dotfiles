@@ -1,4 +1,4 @@
-# Fish config. Port of ~/.zshrc (which still works as a fallback).
+# Fish config.
 # Runs for every fish, so anything slow goes under `status is-interactive`.
 # Always use `--global`, never `set -U`/bare fish_add_path: those write to
 # fish_variables, which is machine-local and not tracked by yadm.
