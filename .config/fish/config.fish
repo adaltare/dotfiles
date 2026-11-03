@@ -37,7 +37,9 @@ fzf --fish | source
 zoxide init fish --cmd cd | source
 function cd --wraps __zoxide_z --description 'zoxide cd; bare cd opens the picker'
     if test (count $argv) -eq 0
-        __zoxide_zi
+        # Same fzf look as Ctrl+T, fed from zoxide's frecency-ordered list.
+        set -l dir (zoxide query --list | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS --scheme=path" fzf)
+        and __zoxide_cd $dir
     else
         __zoxide_z $argv
     end
@@ -57,17 +59,25 @@ function fish_prompt
     string join '' -- (set_color green) (prompt_pwd --full-length-dirs 2) (set_color --reset) (set_color blue) ' $> '
 end
 
-# yadm: fuzzy-pick a tracked dotfile and edit it. (Not an alias: fish's alias
-# appends $argv to the end of the pipeline.)
+# yadm: fuzzy-pick a tracked dotfile and edit it, with the Ctrl+T fzf look.
 function se --description 'yadm: fuzzy-select a tracked file and edit it'
-    yadm -C $HOME ls-files | fzf --print0 | xargs -0 -o -- $EDITOR
+    set -l file (git --git-dir=$HOME/.local/share/yadm/repo.git --work-tree=$HOME -C $HOME ls-files \
+        | FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FZF_CTRL_T_OPTS --scheme=path" fzf)
+    and $EDITOR -- $HOME/$file
 end
 
 # Search file contents: ripgrep -> fzf, previewed in bat at the matching line.
-function z --description 'ripgrep + fzf + bat: search file contents'
-    rg --line-number --no-heading --color=always --smart-case $argv \
-        | fzf --ansi --delimiter : \
-            --preview 'bat --style=numbers --color=always --line-range {2}::4 --highlight-line {2} {1}'
+# Opens the picked matches (Tab to pick several) in $EDITOR at that line and column.
+function z --description 'ripgrep + fzf + bat: search file contents and edit'
+    set -l hits (rg --line-number --column --no-heading --color=always --smart-case $argv \
+        | fzf --ansi --multi --exit-0 --delimiter : \
+            --preview 'bat --style=numbers --color=always --line-range {2}::4 --highlight-line {2} {1}')
+    # rg exits 1 for "no matches" (2 is an error it has already printed).
+    if test $pipestatus[1] -eq 1
+        echo "z: no matches for: $argv" >&2
+        return 1
+    end
+    set -q hits[1]; and $EDITOR -- (string replace -r '^(.*?:\d+:\d+):.*' '$1' -- $hits)
 end
 
 # Shown when a new interactive shell starts.
