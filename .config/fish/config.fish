@@ -84,7 +84,8 @@ function login_status --description 'Local dotfile / sync health summary'
         echo (set_color yellow)"⚠ Failed to sync configs"(set_color normal)"  Check errors with "(set_color cyan)"cat /tmp/login_script.log"(set_color normal)
     end
 
-    if set -l lines (yadm status --porcelain --branch 2>/dev/null)
+    # Plain git on yadm's repo: same output as `yadm status`, minus ~185ms of wrapper.
+    if set -l lines (git --git-dir=$HOME/.local/share/yadm/repo.git --work-tree=$HOME status --porcelain --branch 2>/dev/null)
         set -l dirty (math (count $lines) - 1)
         set -l ahead 0
         string match -rq -- '\[ahead (?<ahead_n>\d+)\]' $lines[1]; and set ahead $ahead_n
