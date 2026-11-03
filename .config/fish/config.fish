@@ -1,36 +1,104 @@
-# Deliberately almost empty. Fish sources, in order:
-#   1. its own embedded config.fish
-#   2. ~/.config/fish/conf.d/*.fish   (alphabetical)
-#   3. THIS file
-# Because this file runs last, nothing else can depend on it, which makes it a
-# bad home for environment or PATH setup. All real configuration lives in
-# conf.d/, one topic per file, numerically prefixed where load order matters:
-#
-#   00-env.fish      PATH, EDITOR, Homebrew, bat  (every fish, incl. `fish -c`)
-#   10-zoxide.fish   zoxide + the cd override     (interactive only)
-#   20-fzf.fish      FZF_* env + key bindings
-#   30-aliases.fish  aliases and abbreviations    (interactive only)
-#
-# Functions live in functions/ and are autoloaded on first use, so they cost
-# nothing at startup: fish_prompt, se, z, login_status.
-#
-# completions/ is intentionally empty - Homebrew already ships fish completions
-# for bun, eza, fd, rg, hx, yadm and zoxide in vendor_completions.d.
-#
-# fish_variables holds machine-local universal-variable state and is NOT tracked
-# by yadm. Never write `set -U` or a bare `fish_add_path` in tracked config: both
-# land in that file and would churn on every machine.
-#
-# This config is an ADDITIVE port of ~/.zshrc, which stays in place and working
-# as a fallback. When you change one, check whether the other needs the same
-# change.
-#
-# MAKING FISH THE LOGIN SHELL on a new machine (both need your password, so
-# ~/.config/yadm/bootstrap cannot do it - it runs non-interactively from
-# launchd). `brew bundle` installs fish; then run:
-#     sudo sh -c 'echo /opt/homebrew/bin/fish >> /etc/shells'
-#     chsh -s /opt/homebrew/bin/fish
+# Fish config. Port of ~/.zshrc (which still works as a fallback).
+# Runs for every fish, so anything slow goes under `status is-interactive`.
+# Always use `--global`, never `set -U`/bare fish_add_path: those write to
+# fish_variables, which is machine-local and not tracked by yadm.
 
-if status is-interactive
-    # Nothing yet. Prefer a conf.d/ file over this block.
+# --- Environment -------------------------------------------------------------
+
+# Homebrew first, then ~/.local/bin, so ~/.local/bin ends up in front.
+set -q HOMEBREW_PREFIX; or /opt/homebrew/bin/brew shellenv fish | source
+fish_add_path --global --move --path $HOME/.local/bin
+fish_add_path --global --move --path $HOME/.local/bin/roc_nightly-macos_apple_silicon-2026-09-18-1d982dc
+set -gx BUN_INSTALL $HOME/.bun
+fish_add_path --global --move --path $BUN_INSTALL/bin
+
+set -gx EDITOR hx
+set -gx HOMEBREW_NO_AUTO_UPDATE 1
+set -gx BAT_THEME_DARK base16
+
+# fzf (one_dark colours). Keep the quotes: unquoted {} is fish brace expansion.
+set -gx FZF_DEFAULT_COMMAND 'fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
+set -gx FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
+set -gx FZF_DEFAULT_OPTS \
+    --reverse --style full --height=12 --prompt= \
+    "--preview 'bat -n --color=always --theme=base16 --plain {}'" \
+    "--color=bg+:#353b45,bg:#282c34,spinner:#56b6c2,hl:#61afef" \
+    "--color=fg:#565c64,header:#61afef,info:#e5c07b,pointer:#56b6c2" \
+    "--color=marker:#56b6c2,fg+:#b6bdca,prompt:#e5c07b,hl+:#61afef"
+set -gx FZF_CTRL_T_OPTS \
+    --style=minimal "--prompt='> '" --info=inline-right --height=8 "--preview=''"
+
+if not status is-interactive
+    return
+end
+
+# --- Interactive -------------------------------------------------------------
+
+fzf --fish | source
+
+# `--cmd cd` keeps the name `z` free for the ripgrep search below.
+zoxide init fish --cmd cd | source
+function cd --wraps __zoxide_z --description 'zoxide cd; bare cd opens the picker'
+    if test (count $argv) -eq 0
+        __zoxide_zi
+    else
+        __zoxide_z $argv
+    end
+end
+
+alias xdg-open open
+alias lg lazygit
+alias ls eza
+alias ll 'eza --long'
+alias la 'eza --all --long'
+alias tree 'eza --tree --level 3'
+
+abbr --add sg 'yadm enter lazygit'
+abbr --add ss 'yadm bootstrap'
+
+function fish_prompt
+    string join '' -- (set_color green) (prompt_pwd --full-length-dirs 2) (set_color --reset) (set_color blue) ' $> '
+end
+
+# yadm: fuzzy-pick a tracked dotfile and edit it. (Not an alias: fish's alias
+# appends $argv to the end of the pipeline.)
+function se --description 'yadm: fuzzy-select a tracked file and edit it'
+    yadm -C $HOME ls-files | fzf --print0 | xargs -0 -o -- $EDITOR
+end
+
+# Search file contents: ripgrep -> fzf, previewed in bat at the matching line.
+function z --description 'ripgrep + fzf + bat: search file contents'
+    rg --line-number --no-heading --color=always --smart-case $argv \
+        | fzf --ansi --delimiter : \
+            --preview 'bat --style=numbers --color=always --line-range {2}::4 --highlight-line {2} {1}'
+end
+
+# Shown when a new interactive shell starts.
+function fish_greeting
+    login_status
+end
+
+# Dotfile / sync health summary.
+function login_status --description 'Local dotfile / sync health summary'
+    if test -f $HOME/.local/state/login_script.failed
+        echo (set_color yellow)"⚠ Failed to sync configs"(set_color normal)"  Check errors with "(set_color cyan)"cat /tmp/login_script.log"(set_color normal)
+    end
+
+    if set -l lines (yadm status --porcelain --branch 2>/dev/null)
+        set -l dirty (math (count $lines) - 1)
+        set -l ahead 0
+        string match -rq -- '\[ahead (?<ahead_n>\d+)\]' $lines[1]; and set ahead $ahead_n
+        set -l parts
+        test $dirty -gt 0; and set -a parts "$dirty uncommitted"
+        test $ahead -gt 0; and set -a parts "$ahead unpushed"
+        if set -q parts[1]
+            echo (set_color yellow)"⚠ Unsynced configs: "(string join ', ' $parts)(set_color normal)" — review with: "(set_color cyan)"sg"(set_color normal)
+        end
+    end
+
+    set -l rclone_exit (launchctl print "gui/"(id -u)"/com.user.rclonebisync" 2>/dev/null \
+        | awk '/last exit code =/ {print $NF; exit}')
+    if test -n "$rclone_exit"; and test "$rclone_exit" != 0
+        echo (set_color yellow)"⚠ Failed to sync documents"(set_color normal)" — check rclone with: "(set_color cyan)"tail -20 /tmp/rclone-bisync-error.log"(set_color normal)
+    end
 end
