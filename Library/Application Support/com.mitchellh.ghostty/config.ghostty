@@ -1,4 +1,4 @@
-theme = Gruvbox Dark
+theme = Gruvbox Material Dark
 window-padding-x = 8
 window-padding-y = 8
 quick-terminal-position = left
