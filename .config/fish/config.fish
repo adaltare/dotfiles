@@ -16,15 +16,12 @@ set -gx EDITOR hx
 set -gx HOMEBREW_NO_AUTO_UPDATE 1
 set -gx BAT_THEME_DARK base16
 
-# fzf (one_dark colours). Keep the quotes: unquoted {} is fish brace expansion.
+# fzf. Keep the quotes: unquoted {} is fish brace expansion.
 set -gx FZF_DEFAULT_COMMAND 'fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
 set -gx FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
 set -gx FZF_DEFAULT_OPTS \
     --reverse --style full --height=12 --prompt= \
-    "--preview 'bat -n --color=always --theme=base16 --plain {}'" \
-    "--color=bg+:#353b45,bg:#282c34,spinner:#56b6c2,hl:#61afef" \
-    "--color=fg:#565c64,header:#61afef,info:#e5c07b,pointer:#56b6c2" \
-    "--color=marker:#56b6c2,fg+:#b6bdca,prompt:#e5c07b,hl+:#61afef"
+    "--preview 'bat -n --color=always --theme=base16 --plain {}'"
 set -gx FZF_CTRL_T_OPTS \
     --style=minimal "--prompt='> '" --info=inline-right --height=8 "--preview=''"
 
