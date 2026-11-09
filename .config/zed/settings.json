@@ -18,7 +18,7 @@
   "autosave": "on_window_change",
   "format_on_save": "modifications_if_available",
   "restore_on_startup": "launchpad",
-  "diff_view_style": "split",
+  "diff_view_style": "unified",
   "cursor_animation": {
     "enabled": true,
   },
@@ -137,7 +137,7 @@
   "tab_bar": {
     "show_tab_bar_buttons": false,
     "show_nav_history_buttons": false,
-    "show": false,
+    "show": true,
   },
   "project_panel": {
     "sort_order": "default",
